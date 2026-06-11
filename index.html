@@ -1,885 +1,1045 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>2048?</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>2048?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #1a1a2e;
-    --panel: #16213e;
-    --board-bg: #0f0f23;
-    --cell-bg: rgba(255,255,255,0.05);
-    --accent: #e94560;
-    --accent2: #f5a623;
-    --text: #e8e8f0;
-    --subtext: #888aaa;
-    --tile-gap: 12px;
-    --tile-size: 105px;
-    --board-size: 480px;
-  }
+    :root {
+      --bg: #1a1a2e;
+      --panel: #16213e;
+      --board-bg: #0f0f23;
+      --cell-bg: rgba(255,255,255,0.05);
+      --accent: #e94560;
+      --accent2: #f5a623;
+      --text: #e8e8f0;
+      --subtext: #888aaa;
+      --tile-gap: 12px;
+      --tile-size: 105px;
+      --board-size: 480px;
+    }
 
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 32px 16px 64px;
-    overflow-x: hidden;
-  }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 64px;
+      overflow-x: hidden;
+    }
 
-  .wrapper { width: 100%; max-width: 520px; }
+    .wrapper { width: 100%; max-width: 520px; }
 
-  /* ── HEADER ── */
-  .header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-  .title-block h1 {
-    font-size: 72px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--accent);
-    letter-spacing: -3px;
-  }
-  .title-block .subtitle {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--subtext);
-    margin-top: 2px;
-  }
-  .scores { display: flex; gap: 8px; }
-  .score-box {
-    background: var(--panel);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    padding: 8px 18px;
-    text-align: center;
-    min-width: 80px;
-  }
-  .score-box .label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--subtext);
-  }
-  .score-box .value {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.1;
-  }
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .title-block h1 {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent);
+      letter-spacing: -3px;
+    }
+    .title-block .subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--subtext);
+      margin-top: 2px;
+    }
+    .scores { display: flex; gap: 8px; }
+    .score-box {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 8px 18px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .score-box .label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--subtext);
+    }
+    .score-box .value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+    }
 
-  /* ── CONTROLS BAR ── */
-  .controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .tagline { font-size: 13px; color: var(--subtext); max-width: 300px; line-height: 1.4; }
-  .tagline strong { color: var(--accent); }
-  .btn-new {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-    flex-shrink: 0;
-  }
-  .btn-new:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-new:active { transform: translateY(0); }
+    /* ── CONTROLS BAR ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .tagline { font-size: 13px; color: var(--subtext); max-width: 300px; line-height: 1.4; }
+    .tagline strong { color: var(--accent); }
+    .btn-new {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .btn-new:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-new:active { transform: translateY(0); }
 
-  /* ── BOARD ── */
-  .board-wrap {
-    position: relative;
-    width: var(--board-size); height: var(--board-size);
-    background: var(--board-bg); border-radius: 10px;
-    padding: var(--tile-gap); border: 1px solid rgba(255,255,255,0.08);
-    user-select: none; touch-action: none; margin: 0 auto;
-  }
-  .grid-layer {
-    position: absolute; inset: var(--tile-gap);
-    display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
-    gap: var(--tile-gap); pointer-events: none;
-  }
-  .grid-cell { background: var(--cell-bg); border-radius: 6px; }
-  .tile-layer { position: absolute; inset: 0; pointer-events: none; }
+    /* ── BOARD ── */
+    .board-wrap {
+      position: relative;
+      width: var(--board-size); height: var(--board-size);
+      background: var(--board-bg); border-radius: 10px;
+      padding: var(--tile-gap); border: 1px solid rgba(255,255,255,0.08);
+      user-select: none; touch-action: none; margin: 0 auto;
+    }
+    .grid-layer {
+      position: absolute; inset: var(--tile-gap);
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
+      gap: var(--tile-gap); pointer-events: none;
+    }
+    .grid-cell { background: var(--cell-bg); border-radius: 6px; }
+    .tile-layer { position: absolute; inset: 0; pointer-events: none; }
 
-  .tile {
-    position: absolute; width: var(--tile-size); height: var(--tile-size);
-    border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 32px; line-height: 1; z-index: 10;
-  }
-  .tile.new-tile  { animation: pop-in    0.18s cubic-bezier(.34,1.56,.64,1) forwards; }
-  .tile.merged-tile { animation: merge-pop 0.18s cubic-bezier(.34,1.56,.64,1) 0.1s forwards; }
+    .tile {
+      position: absolute; width: var(--tile-size); height: var(--tile-size);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 32px; line-height: 1; z-index: 10;
+    }
+    .tile.new-tile  { animation: pop-in    0.18s cubic-bezier(.34,1.56,.64,1) forwards; }
+    .tile.merged-tile { animation: merge-pop 0.18s cubic-bezier(.34,1.56,.64,1) 0.1s forwards; }
 
-  @keyframes pop-in   { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  @keyframes merge-pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+    @keyframes pop-in   { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes merge-pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
 
-  /* ── THINKING OVERLAY ── */
-  .thinking-overlay {
-    position: absolute; inset: 0; border-radius: 10px; z-index: 150;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
-    background: rgba(10, 10, 30, 0.72); backdrop-filter: blur(3px);
-    font-size: 14px; font-weight: 600; color: var(--subtext);
-    /* Hidden by default — toggled via .visible */
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-  .thinking-overlay.visible { opacity: 1; pointer-events: auto; }
-  .thinking-spinner {
-    width: 32px; height: 32px;
-    border: 3px solid rgba(255,255,255,0.1);
-    border-top-color: var(--accent2);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+    /* ── THINKING OVERLAY ── */
+    .thinking-overlay {
+      position: absolute; inset: 0; border-radius: 10px; z-index: 150;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      background: rgba(10, 10, 30, 0.72); backdrop-filter: blur(3px);
+      font-size: 14px; font-weight: 600; color: var(--subtext);
+      /* Hidden by default — toggled via .visible */
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .thinking-overlay.visible { opacity: 1; pointer-events: auto; }
+    .thinking-spinner {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent2);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── GAME OVERLAY ── */
-  .overlay {
-    display: none; position: absolute; inset: 0; border-radius: 10px;
-    background: rgba(10, 10, 30, 0.75); z-index: 200;
-    flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-    backdrop-filter: blur(2px); animation: fadein 0.3s ease;
-  }
-  .overlay.active { display: flex; }
-  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-  .overlay h2 { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
-  .overlay.won  h2 { color: var(--accent2); }
-  .overlay.lost h2 { color: var(--accent); }
-  .overlay p { font-size: 14px; color: var(--subtext); }
-  .overlay-btns { display: flex; gap: 10px; margin-top: 8px; }
-  .overlay-btn {
-    background: var(--accent); color: #fff; border: none; border-radius: 6px;
-    font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; padding: 10px 22px; cursor: pointer; transition: opacity 0.15s;
-  }
-  .overlay-btn.keep { background: rgba(255,255,255,0.1); }
-  .overlay-btn:hover { opacity: 0.8; }
+    /* ── GAME OVERLAY ── */
+    .overlay {
+      display: none; position: absolute; inset: 0; border-radius: 10px;
+      background: rgba(10, 10, 30, 0.75); z-index: 200;
+      flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      backdrop-filter: blur(2px); animation: fadein 0.3s ease;
+    }
+    .overlay.active { display: flex; }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    .overlay h2 { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
+    .overlay.won  h2 { color: var(--accent2); }
+    .overlay.lost h2 { color: var(--accent); }
+    .overlay p { font-size: 14px; color: var(--subtext); }
+    .overlay-btns { display: flex; gap: 10px; margin-top: 8px; }
+    .overlay-btn {
+      background: var(--accent); color: #fff; border: none; border-radius: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding: 10px 22px; cursor: pointer; transition: opacity 0.15s;
+    }
+    .overlay-btn.keep { background: rgba(255,255,255,0.1); }
+    .overlay-btn:hover { opacity: 0.8; }
 
-  /* ── SCORE DELTA ── */
-  .score-delta {
-    position: absolute; pointer-events: none; font-size: 18px; font-weight: 700;
-    color: var(--accent2); z-index: 300; animation: float-up 0.7s ease forwards;
-  }
-  @keyframes float-up { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-40px); } }
+    /* ── SCORE DELTA ── */
+    .score-delta {
+      position: absolute; pointer-events: none; font-size: 18px; font-weight: 700;
+      color: var(--accent2); z-index: 300; animation: float-up 0.7s ease forwards;
+    }
+    @keyframes float-up { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-40px); } }
 
-  /* ── INSTRUCTIONS ── */
-  .instructions { margin-top: 20px; font-size: 12px; color: var(--subtext); line-height: 1.7; text-align: center; }
-  .instructions strong { color: var(--text); }
+    /* ── INSTRUCTIONS ── */
+    .instructions { margin-top: 20px; font-size: 12px; color: var(--subtext); line-height: 1.7; text-align: center; }
+    .instructions strong { color: var(--text); }
 
-  /* ── TILE COLORS ── */
-  .t2 { background: #111B25; color: #ccc; }
-  .t4 { background: #121F37; color: #ccd; }
-  .t8 { background: #0D4E86; color: #fff; }
-  .t16 { background: #0A6A9C; color: #fff; }
-  .t32 { background: #0983A0; color: #fff; }
-  .t64 { background: #09A1C4; color: #fff; }
-  .t128 { background: #12308D; color: #fff; font-size: 26px; }
-  .t256 { background: #12339E; color: #fff; font-size: 26px; }
-  .t512 { background: #1237AF; color: #fff; font-size: 26px; }
-  .t1024 { background: #123AC0; color: #fff; font-size: 22px; }
-  .t2048 { background: #123DD1; color: #fff; font-size: 22px; box-shadow: 0 0 24px rgba(229, 69, 96, 0.6); }
-  .tsuper { background: #C3C5CD; color: #333333; font-size: 18px; box-shadow: 0 0 24px rgba(155, 89, 182, 0.5); }
+    /* ── TILE COLORS ── */
+    .t2 { background: #111B25; color: #ccc; }
+    .t4 { background: #121F37; color: #ccd; }
+    .t8 { background: #0D4E86; color: #fff; }
+    .t16 { background: #0A6A9C; color: #fff; }
+    .t32 { background: #0983A0; color: #fff; }
+    .t64 { background: #09A1C4; color: #fff; }
+    .t128 { background: #12308D; color: #fff; font-size: 26px; }
+    .t256 { background: #12339E; color: #fff; font-size: 26px; }
+    .t512 { background: #1237AF; color: #fff; font-size: 26px; }
+    .t1024 { background: #123AC0; color: #fff; font-size: 22px; }
+    .t2048 { background: #123DD1; color: #fff; font-size: 22px; box-shadow: 0 0 24px rgba(229, 69, 96, 0.6); }
+    .tsuper { background: #C3C5CD; color: #333333; font-size: 18px; box-shadow: 0 0 24px rgba(155, 89, 182, 0.5); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 520px) {
-    :root { --tile-gap: 8px; --tile-size: 60px; --board-size: 280px; }
-    .tile { font-size: 20px; }
-    .t128, .t256, .t512 { font-size: 16px; }
-    .t1024, .t2048 { font-size: 13px; }
-    .tsuper { font-size: 11px; }
-    .title-block h1 { font-size: 48px; }
-  }
-</style>
-</head>
-<body>
-<div class="wrapper">
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      :root { --tile-gap: 8px; --tile-size: 60px; --board-size: 280px; }
+      .tile { font-size: 20px; }
+      .t128, .t256, .t512 { font-size: 16px; }
+      .t1024, .t2048 { font-size: 13px; }
+      .tsuper { font-size: 11px; }
+      .title-block h1 { font-size: 48px; }
+    }
+  </style>
+  </head>
+  <body>
+  <div class="wrapper">
 
-  <div class="header">
-    <div class="title-block">
-      <h1>2048?</h1>
-    </div>
-    <div class="scores">
-      <div class="score-box"><div class="label">Score</div><div class="value" id="score">0</div></div>
-      <div class="score-box"><div class="label">Best</div><div class="value" id="best">0</div></div>
-    </div>
-  </div>
-
-  <div class="controls">
-    <button class="btn-new" id="btn-new">New Game</button>
-  </div>
-
-  <div class="board-wrap" id="board-wrap">
-    <div class="grid-layer">
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div>
-    </div>
-    <div class="tile-layer" id="tile-layer"></div>
-    <div class="thinking-overlay" id="thinking-overlay">
-      <div class="thinking-spinner"></div>
-      Calculating most evil move…
-    </div>
-    <div class="overlay" id="overlay">
-      <h2 id="overlay-title"></h2>
-      <p id="overlay-sub"></p>
-      <div class="overlay-btns">
-        <button class="overlay-btn keep" id="btn-keep" style="display:none">Keep Going</button>
-        <button class="overlay-btn" id="btn-retry">Try Again</button>
+    <div class="header">
+      <div class="title-block">
+        <h1>2048?</h1>
+      </div>
+      <div class="scores">
+        <div class="score-box"><div class="label">Score</div><div class="value" id="score">0</div></div>
+        <div class="score-box"><div class="label">Best</div><div class="value" id="best">0</div></div>
       </div>
     </div>
+
+    <div class="controls">
+      <button class="btn-new" id="btn-new">New Game</button>
+    </div>
+
+    <div class="board-wrap" id="board-wrap">
+      <div class="grid-layer">
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div>
+      </div>
+      <div class="tile-layer" id="tile-layer"></div>
+      <div class="thinking-overlay" id="thinking-overlay">
+        <div class="thinking-spinner"></div>
+        Calculating most evil move…
+      </div>
+      <div class="overlay" id="overlay">
+        <h2 id="overlay-title"></h2>
+        <p id="overlay-sub"></p>
+        <div class="overlay-btns">
+          <button class="overlay-btn keep" id="btn-keep" style="display:none">Keep Going</button>
+          <button class="overlay-btn" id="btn-retry">Try Again</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="instructions">
+      <strong>Arrow keys</strong> or <strong>WASD</strong> to move &nbsp;·&nbsp; Swipe on mobile<br>
+      <!-- add transparent text of version -->
+       Version 1.5
+    </p>
+
   </div>
+  <script>
+  // ─── CONSTANTS ───────────────────────────────────────────────
+  const SIZE = 4;
 
-  <p class="instructions">
-    <strong>Arrow keys</strong> or <strong>WASD</strong> to move &nbsp;·&nbsp; Swipe on mobile
-  </p>
+  function tileSize() {
+    return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-size')) || 105;
+  }
+  function tileGap() {
+    return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-gap')) || 12;
+  }
+  function tileOffset(idx) {
+    const g = tileGap(), s = tileSize();
+    return g + idx * (s + g);
+  }
 
-</div>
-<script>
-// ─── CONSTANTS ───────────────────────────────────────────────
-const SIZE = 4;
+  // ─── GAME STATE ───────────────────────────────────────────────
+  let board, score, best, over, won, keepPlaying;
+  let calculatingMove = false;
+  let moveCount = 0;          // tracks how many player moves have happened
+  let startingTwoPositions = []; // remembers the two initial 2-cell positions
+  best = parseInt(localStorage.getItem('devious2048best') || '0');
 
-function tileSize() {
-  return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-size')) || 105;
-}
-function tileGap() {
-  return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-gap')) || 12;
-}
-function tileOffset(idx) {
-  const g = tileGap(), s = tileSize();
-  return g + idx * (s + g);
-}
+  function emptyBoard() {
+    return Array.from({length: SIZE}, () => Array(SIZE).fill(0));
+  }
+  function cellsAvailable(b) {
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) if (!b[r][c]) return true;
+    return false;
+  }
+  function availableCells(b) {
+    const cells = [];
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) if (!b[r][c]) cells.push([r,c]);
+    return cells;
+  }
+  function maxTile(b) {
+    let m = 0;
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) m = Math.max(m, b[r][c]);
+    return m;
+  }
 
-// ─── GAME STATE ───────────────────────────────────────────────
-let board, score, best, over, won, keepPlaying;
-let calculatingMove = false;
-let moveCount = 0;          // tracks how many player moves have happened
-let startingTwoPositions = []; // remembers the two initial 2-cell positions
-best = parseInt(localStorage.getItem('devious2048best') || '0');
-
-function emptyBoard() {
-  return Array.from({length: SIZE}, () => Array(SIZE).fill(0));
-}
-function cellsAvailable(b) {
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) if (!b[r][c]) return true;
-  return false;
-}
-function availableCells(b) {
-  const cells = [];
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) if (!b[r][c]) cells.push([r,c]);
-  return cells;
-}
-function maxTile(b) {
-  let m = 0;
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) m = Math.max(m, b[r][c]);
-  return m;
-}
-
-// ─── THINKING OVERLAY ─────────────────────────────────────────
-// We need two paint frames between showing the overlay and starting
-// heavy computation, so the browser actually renders it.
-function waitForPaint() {
-  return new Promise(resolve => {
-    // rAF fires before paint; a nested rAF fires after the next paint
-    requestAnimationFrame(() => requestAnimationFrame(resolve));
-  });
-}
-
-async function withThinkingOverlay(fn) {
-  const el = document.getElementById('thinking-overlay');
-  el.classList.add('visible');
-  await waitForPaint();        // overlay is now painted on screen
-  const result = fn();         // run heavy synchronous work
-  el.classList.remove('visible');
-  return result;
-}
-
-// ─── DEVIOUS SPAWN LOGIC ──────────────────────────────────────
-
-let difficulty = 10;
-
-function adversaryDepth() {
-    if (difficulty <= 3) return 0;
-    if (difficulty <= 6) return 1;
-    if (difficulty <= 9) return 2;
-    return 3;
-}
-
-// ─────────────────────────────────────────────
-// HELPER: midpoint cell between two positions
-// Returns the cell closest to the midpoint that is empty on board b.
-// If the exact midpoint isn't a single cell (even distance), pick
-// the cell that is geometrically closest to the average.
-// ─────────────────────────────────────────────
-function midpointCell(b, p1, p2) {
-    const mr = (p1.r + p2.r) / 2;
-    const mc = (p1.c + p2.c) / 2;
-    // Gather empty cells, sorted by euclidean proximity to midpoint
-    const empty = availableCells(b);
-    if (!empty.length) return null;
-    empty.sort((a, b) => {
-        const da = (a[0]-mr)**2 + (a[1]-mc)**2;
-        const db = (b[0]-mr)**2 + (b[1]-mc)**2;
-        return da - db;
+  // ─── THINKING OVERLAY ─────────────────────────────────────────
+  // We need two paint frames between showing the overlay and starting
+  // heavy computation, so the browser actually renders it.
+  function waitForPaint() {
+    return new Promise(resolve => {
+      // rAF fires before paint; a nested rAF fires after the next paint
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
     });
-    return { r: empty[0][0], c: empty[0][1] };
+  }
+
+  async function withThinkingOverlay(fn) {
+    const el = document.getElementById('thinking-overlay');
+    el.classList.add('visible');
+    await waitForPaint();        // overlay is now painted on screen
+    const result = fn();         // run heavy synchronous work
+    el.classList.remove('visible');
+    return result;
+  }
+
+  // ─── DEVIOUS SPAWN LOGIC ──────────────────────────────────────
+
+  let difficulty = 10;
+
+  function adversaryDepth() {
+      if (difficulty <= 3) return 0;
+      if (difficulty <= 6) return 1;
+      if (difficulty <= 9) return 2;
+      return 3;
+  }
+
+  // ─────────────────────────────────────────────
+  // HELPER: midpoint cell between two positions
+  // Returns the cell closest to the midpoint that is empty on board b.
+  // If the exact midpoint isn't a single cell (even distance), pick
+  // the cell that is geometrically closest to the average.
+  // ─────────────────────────────────────────────
+  function midpointCell(b, p1, p2) {
+      const mr = (p1.r + p2.r) / 2;
+      const mc = (p1.c + p2.c) / 2;
+      // Gather empty cells, sorted by euclidean proximity to midpoint
+      const empty = availableCells(b);
+      if (!empty.length) return null;
+      empty.sort((a, b) => {
+          const da = (a[0]-mr)**2 + (a[1]-mc)**2;
+          const db = (b[0]-mr)**2 + (b[1]-mc)**2;
+          return da - db;
+      });
+      return { r: empty[0][0], c: empty[0][1] };
+  }
+
+  // ─────────────────────────────────────────────
+  // SIMULATE PLAYER VALUE AFTER MOVE
+  // Weighted heavily by tile value so larger merges dominate.
+  // ─────────────────────────────────────────────
+  function simulatePlayerBest(b) {
+      let best = -Infinity;
+
+      for (let dir = 0; dir < 4; dir++) {
+          const { board: nb, moved, score } = applyDirection(b, dir);
+          if (!moved) continue;
+
+          // Count weighted potential merges on the resulting board
+          let mergeScore = 0;
+          for (let r = 0; r < SIZE; r++) {
+              for (let c = 0; c < SIZE; c++) {
+                  const v = nb[r][c];
+                  if (!v) continue;
+                  // Weight by tile value: a 256+256 merge is vastly worse for the player
+                  // than a 2+2 merge, so use v² to prioritise blocking big merges.
+                  if (c + 1 < SIZE && nb[r][c + 1] === v) mergeScore += v * v;
+                  if (r + 1 < SIZE && nb[r + 1][c] === v) mergeScore += v * v;
+              }
+          }
+
+          best = Math.max(best, mergeScore + score * score);
+      }
+
+      return best === -Infinity ? 0 : best;
+  }
+
+  // ─────────────────────────────────────────────
+  // COUNT FUTURE MERGES AVAILABLE (all 4 dirs)
+  // Used for the lookahead penalty.
+  // ─────────────────────────────────────────────
+  function countFutureMerges(b) {
+      let total = 0;
+      for (let dir = 0; dir < 4; dir++) {
+          const { board: nb, moved, score } = applyDirection(b, dir);
+          if (!moved) continue;
+          for (let r = 0; r < SIZE; r++) {
+              for (let c = 0; c < SIZE; c++) {
+                  const v = nb[r][c];
+                  if (!v) continue;
+                  // Use v² weighting so larger merges are prioritised for blocking
+                  if (c + 1 < SIZE && nb[r][c + 1] === v) total += v * v;
+                  if (r + 1 < SIZE && nb[r + 1][c] === v) total += v * v;
+              }
+          }
+      }
+      return total;
+  }
+
+  // ─────────────────────────────────────────────
+  // SLIDING MERGES AVAILABLE (all 4 dirs)
+  // Used for the lookahead penalty.
+  // ─────────────────────────────────────────────
+
+  function createsSlideMerge(b, r, c, val) {
+      const tmp = b.map(row => row.slice());
+      tmp[r][c] = val;
+
+      for (let dir = 0; dir < 4; dir++) {
+          const { score } = applyDirection(tmp, dir);
+
+          if (score > 0) {
+              return true;
+          }
+      }
+
+      return false;
+  }
+
+  // ─────────────────────────────────────────────
+  // BLOCK BIG TILE FROM CORNERS / WALLS
+  // Returns a bonus for placing at (r,c) if it obstructs the path
+  // of the largest tile toward its nearest corner or wall.
+  // ─────────────────────────────────────────────
+  function bigTileBlockScore(b, spawnR, spawnC) {
+      // 1. Find the biggest tile and its position.
+      let bigVal = 0, bigR = 0, bigC = 0;
+      for (let r = 0; r < SIZE; r++)
+          for (let c = 0; c < SIZE; c++)
+              if (b[r][c] > bigVal) { bigVal = b[r][c]; bigR = r; bigC = c; }
+
+      if (bigVal === 0) return 0;
+
+      // 2. Determine the nearest corner to the big tile.
+      //    Corners: (0,0) (0,3) (3,0) (3,3)
+      const corners = [[0,0],[0,SIZE-1],[SIZE-1,0],[SIZE-1,SIZE-1]];
+      let bestCorner = corners[0], bestDist = Infinity;
+      for (const [cr, cc] of corners) {
+          const d = Math.abs(bigR - cr) + Math.abs(bigC - cc);
+          if (d < bestDist) { bestDist = d; bestCorner = [cr, cc]; }
+      }
+      const [tgtR, tgtC] = bestCorner;
+
+      // 3. The 'escape corridor' is every cell in the big tile's row toward
+      //    the target corner's column, AND every cell in its column toward
+      //    the target corner's row — the two legs of the L-shaped path.
+      //    We also include the wall cells (full target row and target column)
+      //    since the player may slide the tile all the way to the edge first.
+      let bonus = 0;
+
+      // Cells between bigC and tgtC in bigR's row (horizontal leg)
+      const minC = Math.min(bigC, tgtC), maxC = Math.max(bigC, tgtC);
+      const minR = Math.min(bigR, tgtR), maxR = Math.max(bigR, tgtR);
+
+      const onHorizLeg = (spawnR === bigR  && spawnC >= minC && spawnC <= maxC);
+      const onVertLeg  = (spawnC === bigC  && spawnR >= minR && spawnR <= maxR);
+      // Also reward blocking the target wall row/col (where big tile would park)
+      const onTargetRow = (spawnR === tgtR && spawnC >= minC && spawnC <= maxC);
+      const onTargetCol = (spawnC === tgtC && spawnR >= minR && spawnR <= maxR);
+
+      if (onHorizLeg || onVertLeg || onTargetRow || onTargetCol) {
+          // Weight by big tile value so blocking a 512 matters far more than blocking an 8
+          const proximity = 1 + bestDist;          // closer big tile → higher urgency
+          bonus += (bigVal * bigVal) / proximity;
+      }
+
+      // Extra: if the spawn cell is literally the target corner, max bonus
+      if (spawnR === tgtR && spawnC === tgtC)
+          bonus += bigVal * bigVal * 2;
+
+      return bonus;
+  }
+
+  function monotonicityScore(b) {
+    let score = 0;
+
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE - 1; c++) {
+            const a = b[r][c];
+            const d = b[r][c + 1];
+
+            if (!a || !d) continue;
+
+            score -= Math.abs(Math.log2(a) - Math.log2(d));
+        }
+    }
+
+    for (let c = 0; c < SIZE; c++) {
+        for (let r = 0; r < SIZE - 1; r++) {
+            const a = b[r][c];
+            const d = b[r + 1][c];
+
+            if (!a || !d) continue;
+
+            score -= Math.abs(Math.log2(a) - Math.log2(d));
+        }
+    }
+
+    return score;
 }
 
-// ─────────────────────────────────────────────
-// SIMULATE PLAYER VALUE AFTER MOVE
-// Weighted heavily by tile value so larger merges dominate.
-// ─────────────────────────────────────────────
-function simulatePlayerBest(b) {
+function snakeScore(b) {
+    const snakeWeights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,   128,   64,    32],
+        [2,     4,     8,     16]
+    ];
+
+    let score = 0;
+
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            score += b[r][c] * snakeWeights[r][c];
+        }
+    }
+
+    return score;
+}
+
+function emptySpaceScore(b) {
+    let count = 0;
+
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            if (b[r][c] === 0)
+                count++;
+        }
+    }
+
+    return count;
+}
+
+function evaluateBoardForPlayer(b) {
+    return (
+        snakeScore(b) * 0.0001 +
+        monotonicityScore(b) * 50 +
+        emptySpaceScore(b) * 500 +
+        maxTile(b)
+    );
+}
+
+function minimaxPlayer(b, depth) {
+    if (depth <= 0)
+        return evaluateBoardForPlayer(b);
+
     let best = -Infinity;
 
     for (let dir = 0; dir < 4; dir++) {
-        const { board: nb, moved, score } = applyDirection(b, dir);
-        if (!moved) continue;
+        const result = applyDirection(b, dir);
 
-        // Count weighted potential merges on the resulting board
-        let mergeScore = 0;
-        for (let r = 0; r < SIZE; r++) {
-            for (let c = 0; c < SIZE; c++) {
-                const v = nb[r][c];
-                if (!v) continue;
-                // Weight by tile value: a 256+256 merge is vastly worse for the player
-                // than a 2+2 merge, so use v² to prioritise blocking big merges.
-                if (c + 1 < SIZE && nb[r][c + 1] === v) mergeScore += v * v;
-                if (r + 1 < SIZE && nb[r + 1][c] === v) mergeScore += v * v;
-            }
-        }
+        if (!result.moved)
+            continue;
 
-        best = Math.max(best, mergeScore + score * score);
+        best = Math.max(
+            best,
+            minimaxSpawner(result.board, depth - 1)
+        );
     }
 
-    return best === -Infinity ? 0 : best;
+    return best === -Infinity
+        ? evaluateBoardForPlayer(b)
+        : best;
 }
 
-// ─────────────────────────────────────────────
-// COUNT FUTURE MERGES AVAILABLE (all 4 dirs)
-// Used for the lookahead penalty.
-// ─────────────────────────────────────────────
-function countFutureMerges(b) {
-    let total = 0;
-    for (let dir = 0; dir < 4; dir++) {
-        const { board: nb, moved, score } = applyDirection(b, dir);
-        if (!moved) continue;
-        for (let r = 0; r < SIZE; r++) {
-            for (let c = 0; c < SIZE; c++) {
-                const v = nb[r][c];
-                if (!v) continue;
-                // Use v² weighting so larger merges are prioritised for blocking
-                if (c + 1 < SIZE && nb[r][c + 1] === v) total += v * v;
-                if (r + 1 < SIZE && nb[r + 1][c] === v) total += v * v;
-            }
-        }
-    }
-    return total;
-}
-
-// ─────────────────────────────────────────────
-// SLIDING MERGES AVAILABLE (all 4 dirs)
-// Used for the lookahead penalty.
-// ─────────────────────────────────────────────
-
-function createsSlideMerge(b, r, c, val) {
-    const tmp = b.map(row => row.slice());
-    tmp[r][c] = val;
-
-    for (let dir = 0; dir < 4; dir++) {
-        const { score } = applyDirection(tmp, dir);
-
-        if (score > 0) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// ─────────────────────────────────────────────
-// BLOCK BIG TILE FROM CORNERS / WALLS
-// Returns a bonus for placing at (r,c) if it obstructs the path
-// of the largest tile toward its nearest corner or wall.
-// ─────────────────────────────────────────────
-function bigTileBlockScore(b, spawnR, spawnC) {
-    // 1. Find the biggest tile and its position.
-    let bigVal = 0, bigR = 0, bigC = 0;
-    for (let r = 0; r < SIZE; r++)
-        for (let c = 0; c < SIZE; c++)
-            if (b[r][c] > bigVal) { bigVal = b[r][c]; bigR = r; bigC = c; }
-
-    if (bigVal === 0) return 0;
-
-    // 2. Determine the nearest corner to the big tile.
-    //    Corners: (0,0) (0,3) (3,0) (3,3)
-    const corners = [[0,0],[0,SIZE-1],[SIZE-1,0],[SIZE-1,SIZE-1]];
-    let bestCorner = corners[0], bestDist = Infinity;
-    for (const [cr, cc] of corners) {
-        const d = Math.abs(bigR - cr) + Math.abs(bigC - cc);
-        if (d < bestDist) { bestDist = d; bestCorner = [cr, cc]; }
-    }
-    const [tgtR, tgtC] = bestCorner;
-
-    // 3. The 'escape corridor' is every cell in the big tile's row toward
-    //    the target corner's column, AND every cell in its column toward
-    //    the target corner's row — the two legs of the L-shaped path.
-    //    We also include the wall cells (full target row and target column)
-    //    since the player may slide the tile all the way to the edge first.
-    let bonus = 0;
-
-    // Cells between bigC and tgtC in bigR's row (horizontal leg)
-    const minC = Math.min(bigC, tgtC), maxC = Math.max(bigC, tgtC);
-    const minR = Math.min(bigR, tgtR), maxR = Math.max(bigR, tgtR);
-
-    const onHorizLeg = (spawnR === bigR  && spawnC >= minC && spawnC <= maxC);
-    const onVertLeg  = (spawnC === bigC  && spawnR >= minR && spawnR <= maxR);
-    // Also reward blocking the target wall row/col (where big tile would park)
-    const onTargetRow = (spawnR === tgtR && spawnC >= minC && spawnC <= maxC);
-    const onTargetCol = (spawnC === tgtC && spawnR >= minR && spawnR <= maxR);
-
-    if (onHorizLeg || onVertLeg || onTargetRow || onTargetCol) {
-        // Weight by big tile value so blocking a 512 matters far more than blocking an 8
-        const proximity = 1 + bestDist;          // closer big tile → higher urgency
-        bonus += (bigVal * bigVal) / proximity;
-    }
-
-    // Extra: if the spawn cell is literally the target corner, max bonus
-    if (spawnR === tgtR && spawnC === tgtC)
-        bonus += bigVal * bigVal * 2;
-
-    return bonus;
-}
-
-// ─────────────────────────────────────────────
-// CORE: SPAWN IMPACT SCORE
-// Higher score = worse for the player = more devious.
-// ─────────────────────────────────────────────
-function spawnImpactScore(b, r, c, val) {
-    const tmp = b.map(row => row.slice());
-    tmp[r][c] = val;
-
-    // Primary: how much the spawn reduces the player's future merge potential
-    const base  = simulatePlayerBest(b);
-    const after = simulatePlayerBest(tmp);
-    const improvement = after - base;
-
-    // We want worst for player → maximise -improvement
-    let sc = -improvement;
-
-    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-
-    // ── Rule 5: Prioritise blocking LARGER merges ──────────────
-    // If spawning here creates an adjacency with a same-value tile
-    // (i.e. an immediate merge opportunity), penalise proportionally
-    // to tile value squared so bigger tiles are blocked first.
-    for (const [dr, dc] of dirs) {
-        const nr = r + dr, nc = c + dc;
-        if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE) {
-            const neighbor = b[nr][nc];
-            if (neighbor === val) {
-                // immediate match: strong bonus, scaling with value
-                sc += 100 + val * val;
-            } else if (neighbor > val) {
-                // we're next to a larger tile: slightly disruptive
-                sc += neighbor * 5;
-            }
-        }
-    }
-
-    // ── Rule 3: Minimise future merges ────────────────────────
-    // Also look one step deeper: after placing this tile, how many
-    // merges does the player still have available across all moves?
-    // We want that count to be as LOW as possible.
-    const futureMergesAfter = countFutureMerges(tmp);
-    sc -= futureMergesAfter;     // lower future merges = higher spawn score
-
-    // ── Extra: break up same-row / same-col matching ───────────
-    let rowColMatches = 0;
-    for (let i = 0; i < SIZE; i++) {
-        if (b[r][i] === val && i !== c) rowColMatches++;
-        if (b[i][c] === val && i !== r) rowColMatches++;
-    }
-    sc += rowColMatches * val * 10;
-
-    // ── Block biggest tile from reaching corners / walls ──────
-    // Find the highest-value tile and the corner it is gravitating toward
-    // (i.e. the corner that minimises Manhattan distance to it).
-    // Then heavily reward spawning on cells that lie between the big tile
-    // and that corner/wall, cutting off its escape route.
-    sc += bigTileBlockScore(b, r, c);
-
-    return sc;
-}
-
-// ─────────────────────────────────────────────
-// MAIN SPAWN FUNCTION
-// moveCount is passed so we can apply special rules for move 1.
-// ─────────────────────────────────────────────
-function deviousSpawn(b, mc) {
+function minimaxSpawner(b, depth) {
     const empty = availableCells(b);
-    if (!empty.length) return null;
 
-    // ── Rule 2: After first move → place a 4 between the two 2s ──
-    // Find where the 2s actually ARE on the current board (they moved when player slid).
-    if (mc === 1) {
-        const twos = [];
-        for (let r = 0; r < SIZE; r++)
-            for (let c = 0; c < SIZE; c++)
-                if (b[r][c] === 2) twos.push({ r, c });
-        if (twos.length === 2) {
-            const mid = midpointCell(b, twos[0], twos[1]);
-            if (mid) {
-                const chosen = { r: mid.r, c: mid.c, val: 4, score: 9999 };
-                return { chosen, candidates: [chosen] };
-            }
-        }
-    }
+    if (!empty.length)
+        return evaluateBoardForPlayer(b);
 
-    // ── Normal devious spawn (Rules 3, 4, 5) ──────────────────
-    const candidates = [];
-    const baseBoardScore = simulatePlayerBest(b);
-
-    // Hard rule: never place a tile immediately adjacent to an equal-value tile.
-    function isImmediatelyMergeable(r, c, val) {
-        const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-        for (const [dr, dc] of dirs) {
-            const nr = r + dr, nc = c + dc;
-            if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && b[nr][nc] === val)
-                return true;
-        }
-        return false;
-    }
+    let worst = Infinity;
 
     for (const [r, c] of empty) {
         for (const val of [2, 4]) {
-            if (isImmediatelyMergeable(r, c, val)) continue;
-            if (createsSlideMerge(b, r, c, val)) continue;
-
             const tmp = b.map(row => row.slice());
+
             tmp[r][c] = val;
 
-            const afterScore = simulatePlayerBest(tmp);
-            const delta = afterScore - baseBoardScore;
-
-            const sc = spawnImpactScore(b, r, c, val);
-
-            // Hard filter: skip anything that genuinely improves player position
-            if (delta > 50) continue;
-
-            candidates.push({ r, c, val, score: sc });
+            worst = Math.min(
+                worst,
+                minimaxPlayer(tmp, depth)
+            );
         }
     }
 
-    // Fallback 1: drop the delta filter but keep no-merge rule
-    if (!candidates.length) {
-        for (const [r, c] of empty) {
-            for (const val of [2, 4]) {
-                if (!isImmediatelyMergeable(r, c, val))
-                    candidates.push({ r, c, val, score: -99999 });
-            }
-        }
-    }
-    // Fallback 2: board totally full of same values — allow anything
-    if (!candidates.length) {
-        for (const [r, c] of empty) {
-            for (const val of [2, 4]) {
-                candidates.push({ r, c, val, score: -99999 });
-            }
-        }
-    }
-
-    // Sort descending: highest score = worst for player
-    candidates.sort((a, b) => b.score - a.score);
-
-    return {
-        chosen: candidates[0],
-        candidates
-    };
+    return worst;
 }
 
-// ─── MOVEMENT LOGIC ───────────────────────────────────────────
-function slideRow(row) {
-  let tiles = row.filter(v => v);
-  let gainedScore = 0;
-  const out = [];
-  for (let i = 0; i < tiles.length; i++) {
-    if (i + 1 < tiles.length && tiles[i] === tiles[i+1]) {
-      const val = tiles[i] * 2;
-      out.push({ val, merged: true });
-      gainedScore += val;
-      i++;
+function spawnMinimaxScore(b, r, c, val, depth) {
+    const tmp = b.map(row => row.slice());
+
+    tmp[r][c] = val;
+
+    return minimaxPlayer(tmp, depth);
+}
+
+  // ─────────────────────────────────────────────
+  // CORE: SPAWN IMPACT SCORE
+  // Higher score = worse for the player = more devious.
+  // ─────────────────────────────────────────────
+  function spawnImpactScore(b, r, c, val) {
+      let tmp = b.map(row => row.slice());
+      tmp[r][c] = val;
+
+      // Primary: how much the spawn reduces the player's future merge potential
+      const base  = simulatePlayerBest(b);
+      const after = simulatePlayerBest(tmp);
+      const improvement = after - base;
+
+      // We want worst for player → maximise -improvement
+      let sc = -improvement;
+
+      const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+
+      // ── Rule 5: Prioritise blocking LARGER merges ──────────────
+      // If spawning here creates an adjacency with a same-value tile
+      // (i.e. an immediate merge opportunity), penalise proportionally
+      // to tile value squared so bigger tiles are blocked first.
+      for (const [dr, dc] of dirs) {
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE) {
+              const neighbor = b[nr][nc];
+              if (neighbor === val) {
+                  // immediate match: strong bonus, scaling with value
+                  sc += 100 + val * val;
+              } else if (neighbor > val) {
+                  // we're next to a larger tile: slightly disruptive
+                  sc += neighbor * 5;
+              }
+          }
+      }
+
+      // ── Rule 3: Minimise future merges ────────────────────────
+      // Also look one step deeper: after placing this tile, how many
+      // merges does the player still have available across all moves?
+      // We want that count to be as LOW as possible.
+      const futureMergesAfter = countFutureMerges(tmp);
+      sc -= futureMergesAfter;     // lower future merges = higher spawn score
+
+      // ── Extra: break up same-row / same-col matching ───────────
+      let rowColMatches = 0;
+      for (let i = 0; i < SIZE; i++) {
+          if (b[r][i] === val && i !== c) rowColMatches++;
+          if (b[i][c] === val && i !== r) rowColMatches++;
+      }
+      sc += rowColMatches * val * 10;
+
+      // ── Block biggest tile from reaching corners / walls ──────
+      // Find the highest-value tile and the corner it is gravitating toward
+      // (i.e. the corner that minimises Manhattan distance to it).
+      // Then heavily reward spawning on cells that lie between the big tile
+      // and that corner/wall, cutting off its escape route.
+      sc += bigTileBlockScore(b, r, c);
+
+      tmp = b.map(row => row.slice());
+tmp[r][c] = val;
+
+const snakeBefore = snakeScore(b);
+const snakeAfter = snakeScore(tmp);
+
+const monoBefore = monotonicityScore(b);
+const monoAfter = monotonicityScore(tmp);
+
+const emptyAfter = emptySpaceScore(tmp);
+
+sc += (snakeBefore - snakeAfter) * 0.00001;
+sc += (monoBefore - monoAfter) * 100;
+sc += (16 - emptyAfter) * 500;
+
+const depth = 2;
+
+const futurePlayerValue =
+    spawnMinimaxScore(b, r, c, val, depth);
+
+sc -= futurePlayerValue;
+
+      return sc;
+  }
+
+  // ─────────────────────────────────────────────
+  // MAIN SPAWN FUNCTION
+  // moveCount is passed so we can apply special rules for move 1.
+  // ─────────────────────────────────────────────
+  function deviousSpawn(b, mc) {
+      const empty = availableCells(b);
+      if (!empty.length) return null;
+
+      // ── Rule 2: After first move → place a 4 between the two 2s ──
+      // Find where the 2s actually ARE on the current board (they moved when player slid).
+      if (mc === 1) {
+          const twos = [];
+          for (let r = 0; r < SIZE; r++)
+              for (let c = 0; c < SIZE; c++)
+                  if (b[r][c] === 2) twos.push({ r, c });
+          if (twos.length === 2) {
+              const mid = midpointCell(b, twos[0], twos[1]);
+              if (mid) {
+                  const chosen = { r: mid.r, c: mid.c, val: 4, score: 9999 };
+                  return { chosen, candidates: [chosen] };
+              }
+          }
+      }
+
+      // ── Normal devious spawn (Rules 3, 4, 5) ──────────────────
+      const candidates = [];
+      const baseBoardScore = simulatePlayerBest(b);
+
+      // Hard rule: never place a tile immediately adjacent to an equal-value tile.
+      function isImmediatelyMergeable(r, c, val) {
+          const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+          for (const [dr, dc] of dirs) {
+              const nr = r + dr, nc = c + dc;
+              if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && b[nr][nc] === val)
+                  return true;
+          }
+          return false;
+      }
+
+      for (const [r, c] of empty) {
+          for (const val of [2, 4]) {
+              if (isImmediatelyMergeable(r, c, val)) continue;
+              let penalty = 0;
+
+              if (createsSlideMerge(b, r, c, val))
+                  penalty = 5000;
+
+              let tmp = b.map(row => row.slice());
+              tmp[r][c] = val;
+
+              const afterScore = simulatePlayerBest(tmp);
+              const delta = afterScore - baseBoardScore;
+
+              const sc = spawnImpactScore(b, r, c, val);
+              const finalScore = sc - penalty;
+
+              // Hard filter: skip anything that genuinely improves player position
+              if (delta > 50) continue;
+
+              candidates.push({ r, c, val, score: finalScore });
+          }
+      }
+
+      // Fallback 1: drop the delta filter but keep no-merge rule
+      if (!candidates.length) {
+          for (const [r, c] of empty) {
+              for (const val of [2, 4]) {
+                  if (!isImmediatelyMergeable(r, c, val))
+                      candidates.push({ r, c, val, score: -99999 });
+              }
+          }
+      }
+      // Fallback 2: board totally full of same values — allow anything
+      if (!candidates.length) {
+          for (const [r, c] of empty) {
+              for (const val of [2, 4]) {
+                  candidates.push({ r, c, val, score: -99999 });
+              }
+          }
+      }
+
+      // Sort descending: highest score = worst for player
+      candidates.sort((a, b) => b.score - a.score);
+
+      const bestScore = candidates[0].score;
+
+      // Collect all candidates tied for best score
+      const tied = candidates.filter(c => c.score === bestScore);
+
+      // Pick one randomly
+      const chosen = tied[Math.floor(Math.random() * tied.length)];
+
+      return {
+          chosen,
+          candidates
+      };
+  }
+
+  // ─── MOVEMENT LOGIC ───────────────────────────────────────────
+  function slideRow(row) {
+    let tiles = row.filter(v => v);
+    let gainedScore = 0;
+    const out = [];
+    for (let i = 0; i < tiles.length; i++) {
+      if (i + 1 < tiles.length && tiles[i] === tiles[i+1]) {
+        const val = tiles[i] * 2;
+        out.push({ val, merged: true });
+        gainedScore += val;
+        i++;
+      } else {
+        out.push({ val: tiles[i], merged: false });
+      }
+    }
+    while (out.length < SIZE) out.push({ val: 0, merged: false });
+    return { row: out, score: gainedScore };
+  }
+
+  function rotateBoard(b) {
+    const out = emptyBoard();
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) out[c][SIZE-1-r] = b[r][c];
+    return out;
+  }
+
+  function moveLeft(b) {
+    let totalScore = 0, moved = false;
+    const newBoard = emptyBoard();
+    for (let r=0;r<SIZE;r++) {
+      const { row, score } = slideRow(b[r]);
+      totalScore += score;
+      for (let c=0;c<SIZE;c++) newBoard[r][c] = row[c].val;
+      if (b[r].join() !== newBoard[r].join()) moved = true;
+    }
+    return { board: newBoard, score: totalScore, moved };
+  }
+
+  function applyDirection(b, dir) {
+    const rotations = [0, 3, 2, 1][dir];
+    let cur = b;
+    for (let i = 0; i < rotations; i++) cur = rotateBoard(cur);
+    const res = moveLeft(cur);
+    const unrot = (4 - rotations) % 4;
+    let nb = res.board;
+    for (let i = 0; i < unrot; i++) nb = rotateBoard(nb);
+    return { board: nb, score: res.score, moved: res.moved };
+  }
+
+  function movesAvailable(b) {
+    if (cellsAvailable(b)) return true;
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) {
+      const v = b[r][c];
+      if (r+1<SIZE && b[r+1][c]===v) return true;
+      if (c+1<SIZE && b[r][c+1]===v) return true;
+    }
+    return false;
+  }
+
+  // ─── TILE COLORS ─────────────────────────────────────────────
+  function tileClass(val) {
+    if (val === 2048) return 't2048';
+    if (val > 2048)   return 'tsuper';
+    return { 2:'t2',4:'t4',8:'t8',16:'t16',32:'t32',64:'t64',
+            128:'t128',256:'t256',512:'t512',1024:'t1024' }[val] || 't2';
+  }
+  function chipColor(val) {
+    return { 2:'#2d2d4e',4:'#3a2d5e',8:'#4e2060',16:'#6b1f6e',
+            32:'#8c1f5e',64:'#c0392b',128:'#e67e22',256:'#f39c12',
+            512:'#27ae60',1024:'#2980b9' }[val] || '#555';
+  }
+
+  // ─── RENDERING ────────────────────────────────────────────────
+  let prevBoard = null;
+
+  function renderBoard(newBoard, spawnResult, mergeCells) {
+    const layer = document.getElementById('tile-layer');
+    layer.innerHTML = '';
+    for (let r=0;r<SIZE;r++) {
+      for (let c=0;c<SIZE;c++) {
+        const val = newBoard[r][c];
+        if (!val) continue;
+        const el = document.createElement('div');
+        el.className = 'tile ' + tileClass(val);
+        el.textContent = val;
+        el.style.left   = tileOffset(c) + 'px';
+        el.style.top    = tileOffset(r) + 'px';
+        el.style.width  = tileSize() + 'px';
+        el.style.height = tileSize() + 'px';
+        if (spawnResult && r === spawnResult.chosen.r && c === spawnResult.chosen.c)
+          el.classList.add('new-tile');
+        if (mergeCells)
+          for (const [mr, mc] of mergeCells)
+            if (mr === r && mc === c) { el.classList.add('merged-tile'); break; }
+        layer.appendChild(el);
+      }
+    }
+    prevBoard = newBoard.map(r => [...r]);
+  }
+
+  // ─── SCORE DISPLAY ────────────────────────────────────────────
+  function showScoreDelta(delta) {
+    if (!delta) return;
+    const el = document.createElement('div');
+    el.className = 'score-delta';
+    el.textContent = '+' + delta;
+    el.style.left = (Math.random() * 200 + 100) + 'px';
+    el.style.top  = (Math.random() * 100 + 100) + 'px';
+    document.getElementById('board-wrap').appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  }
+  function updateScoreDisplay() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('best').textContent  = best;
+  }
+
+  // ─── OVERLAY ──────────────────────────────────────────────────
+  function showOverlay(type) {
+    const ov    = document.getElementById('overlay');
+    const title = document.getElementById('overlay-title');
+    const sub   = document.getElementById('overlay-sub');
+    const keep  = document.getElementById('btn-keep');
+    ov.className = 'overlay active ' + type;
+    if (type === 'won') {
+      title.textContent = 'You won!';
+      sub.textContent   = 'Against all odds… keep going?';
+      keep.style.display = 'inline-block';
     } else {
-      out.push({ val: tiles[i], merged: false });
+      title.textContent = 'Game Over';
+      sub.textContent   = 'Try better next time.';
+      keep.style.display = 'none';
     }
   }
-  while (out.length < SIZE) out.push({ val: 0, merged: false });
-  return { row: out, score: gainedScore };
-}
-
-function rotateBoard(b) {
-  const out = emptyBoard();
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) out[c][SIZE-1-r] = b[r][c];
-  return out;
-}
-
-function moveLeft(b) {
-  let totalScore = 0, moved = false;
-  const newBoard = emptyBoard();
-  for (let r=0;r<SIZE;r++) {
-    const { row, score } = slideRow(b[r]);
-    totalScore += score;
-    for (let c=0;c<SIZE;c++) newBoard[r][c] = row[c].val;
-    if (b[r].join() !== newBoard[r].join()) moved = true;
+  function hideOverlay() {
+    document.getElementById('overlay').className = 'overlay';
   }
-  return { board: newBoard, score: totalScore, moved };
-}
 
-function applyDirection(b, dir) {
-  const rotations = [0, 3, 2, 1][dir];
-  let cur = b;
-  for (let i = 0; i < rotations; i++) cur = rotateBoard(cur);
-  const res = moveLeft(cur);
-  const unrot = (4 - rotations) % 4;
-  let nb = res.board;
-  for (let i = 0; i < unrot; i++) nb = rotateBoard(nb);
-  return { board: nb, score: res.score, moved: res.moved };
-}
+  // ─── GAME ACTIONS ─────────────────────────────────────────────
+  function initGame() {
+    board = emptyBoard();
+    score = 0; over = false; won = false; keepPlaying = false;
+    calculatingMove = false;
+    moveCount = 0;
+    startingTwoPositions = [];
+    hideOverlay();
+    document.getElementById('thinking-overlay').classList.remove('visible');
 
-function movesAvailable(b) {
-  if (cellsAvailable(b)) return true;
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) {
-    const v = b[r][c];
-    if (r+1<SIZE && b[r+1][c]===v) return true;
-    if (c+1<SIZE && b[r][c+1]===v) return true;
+    // Place two starting 2s at least 1 cell apart in BOTH cardinal directions
+    // (|dr| >= 2 OR they are not adjacent; we require min separation of 2 in both r and c)
+    const cells = availableCells(board);
+    let r1, c1, r2, c2;
+    let tries = 0;
+    do {
+      const i1 = Math.floor(Math.random() * cells.length);
+      let i2 = Math.floor(Math.random() * (cells.length - 1));
+      if (i2 >= i1) i2++;
+      [r1, c1] = cells[i1];
+      [r2, c2] = cells[i2];
+      tries++;
+      // "at least one cell apart in both cardinal directions" = differ by ≥ 2 in row AND column
+    } while ((Math.abs(r1-r2) < 2 || Math.abs(c1-c2) < 2) && tries < 200);
+
+    board[r1][c1] = 2;
+    board[r2][c2] = 2;
+    startingTwoPositions = [{r: r1, c: c1}, {r: r2, c: c2}];
+
+    updateScoreDisplay();
+    prevBoard = null;
+    renderBoard(board, null, null);
   }
-  return false;
-}
 
-// ─── TILE COLORS ─────────────────────────────────────────────
-function tileClass(val) {
-  if (val === 2048) return 't2048';
-  if (val > 2048)   return 'tsuper';
-  return { 2:'t2',4:'t4',8:'t8',16:'t16',32:'t32',64:'t64',
-           128:'t128',256:'t256',512:'t512',1024:'t1024' }[val] || 't2';
-}
-function chipColor(val) {
-  return { 2:'#2d2d4e',4:'#3a2d5e',8:'#4e2060',16:'#6b1f6e',
-           32:'#8c1f5e',64:'#c0392b',128:'#e67e22',256:'#f39c12',
-           512:'#27ae60',1024:'#2980b9' }[val] || '#555';
-}
+  async function doMove(dir) {
+    if (calculatingMove) return;
+    if (over || (won && !keepPlaying)) return;
 
-// ─── RENDERING ────────────────────────────────────────────────
-let prevBoard = null;
+    const { board: nb, score: gained, moved } = applyDirection(board, dir);
+    if (!moved) return;
 
-function renderBoard(newBoard, spawnResult, mergeCells) {
-  const layer = document.getElementById('tile-layer');
-  layer.innerHTML = '';
-  for (let r=0;r<SIZE;r++) {
-    for (let c=0;c<SIZE;c++) {
-      const val = newBoard[r][c];
-      if (!val) continue;
-      const el = document.createElement('div');
-      el.className = 'tile ' + tileClass(val);
-      el.textContent = val;
-      el.style.left   = tileOffset(c) + 'px';
-      el.style.top    = tileOffset(r) + 'px';
-      el.style.width  = tileSize() + 'px';
-      el.style.height = tileSize() + 'px';
-      if (spawnResult && r === spawnResult.chosen.r && c === spawnResult.chosen.c)
-        el.classList.add('new-tile');
-      if (mergeCells)
-        for (const [mr, mc] of mergeCells)
-          if (mr === r && mc === c) { el.classList.add('merged-tile'); break; }
-      layer.appendChild(el);
+    calculatingMove = true;
+
+    const oldBoard = board.map(r => [...r]);
+    board = nb;
+    score += gained;
+    if (score > best) { best = score; localStorage.setItem('devious2048best', best); }
+    moveCount++;
+
+    // Detect merged cells
+    const mergeCells = [];
+    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) {
+      if (nb[r][c] && nb[r][c] > (oldBoard[r][c]||0) && nb[r][c] === (oldBoard[r][c]||0)*2)
+        mergeCells.push([r,c]);
+    }
+
+    if (gained) showScoreDelta(gained);
+    updateScoreDisplay();
+
+    // Paint the board with merged tiles immediately, before the thinking starts
+    renderBoard(board, null, mergeCells);
+
+    // Check win
+    if (!won)
+      for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++)
+        if (board[r][c] === 2048) { won = true; break; }
+
+    // Run devious spawn behind the thinking overlay.
+    // withThinkingOverlay ensures the overlay is painted BEFORE computation begins.
+    let spawnResult = null;
+    if (cellsAvailable(board)) {
+      spawnResult = await withThinkingOverlay(() => deviousSpawn(board, moveCount));
+      board[spawnResult.chosen.r][spawnResult.chosen.c] = spawnResult.chosen.val;
+    }
+
+    calculatingMove = false;
+
+    renderBoard(board, spawnResult, null);
+
+    if (!movesAvailable(board)) {
+      over = true;
+      setTimeout(() => showOverlay('lost'), 400);
+    } else if (won && !keepPlaying) {
+      setTimeout(() => showOverlay('won'), 400);
     }
   }
-  prevBoard = newBoard.map(r => [...r]);
-}
 
-// ─── SCORE DISPLAY ────────────────────────────────────────────
-function showScoreDelta(delta) {
-  if (!delta) return;
-  const el = document.createElement('div');
-  el.className = 'score-delta';
-  el.textContent = '+' + delta;
-  el.style.left = (Math.random() * 200 + 100) + 'px';
-  el.style.top  = (Math.random() * 100 + 100) + 'px';
-  document.getElementById('board-wrap').appendChild(el);
-  setTimeout(() => el.remove(), 700);
-}
-function updateScoreDisplay() {
-  document.getElementById('score').textContent = score;
-  document.getElementById('best').textContent  = best;
-}
+  // ─── INPUT ────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    const dirMap = { ArrowLeft:0,a:0,A:0, ArrowUp:1,w:1,W:1, ArrowRight:2,d:2,D:2, ArrowDown:3,s:3,S:3 };
+    if (dirMap[e.key] !== undefined) { e.preventDefault(); doMove(dirMap[e.key]); }
+  });
 
-// ─── OVERLAY ──────────────────────────────────────────────────
-function showOverlay(type) {
-  const ov    = document.getElementById('overlay');
-  const title = document.getElementById('overlay-title');
-  const sub   = document.getElementById('overlay-sub');
-  const keep  = document.getElementById('btn-keep');
-  ov.className = 'overlay active ' + type;
-  if (type === 'won') {
-    title.textContent = 'You won!';
-    sub.textContent   = 'Against all odds… keep going?';
-    keep.style.display = 'inline-block';
-  } else {
-    title.textContent = 'Game Over';
-    sub.textContent   = 'Try better next time.';
-    keep.style.display = 'none';
-  }
-}
-function hideOverlay() {
-  document.getElementById('overlay').className = 'overlay';
-}
+  let touchStartX = null, touchStartY = null;
+  document.getElementById('board-wrap').addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.getElementById('board-wrap').addEventListener('touchend', e => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const adx = Math.abs(dx), ady = Math.abs(dy);
+    if (Math.max(adx, ady) < 20) return;
+    if (adx > ady) doMove(dx > 0 ? 2 : 0);
+    else            doMove(dy > 0 ? 3 : 1);
+    touchStartX = touchStartY = null;
+  });
 
-// ─── GAME ACTIONS ─────────────────────────────────────────────
-function initGame() {
-  board = emptyBoard();
-  score = 0; over = false; won = false; keepPlaying = false;
-  calculatingMove = false;
-  moveCount = 0;
-  startingTwoPositions = [];
-  hideOverlay();
-  document.getElementById('thinking-overlay').classList.remove('visible');
+  // ─── BUTTONS ─────────────────────────────────────────────────
+  document.getElementById('btn-new').addEventListener('click', initGame);
+  document.getElementById('btn-retry').addEventListener('click', initGame);
+  document.getElementById('btn-keep').addEventListener('click', () => { keepPlaying = true; hideOverlay(); });
 
-  // Place two starting 2s at least 1 cell apart in BOTH cardinal directions
-  // (|dr| >= 2 OR they are not adjacent; we require min separation of 2 in both r and c)
-  const cells = availableCells(board);
-  let r1, c1, r2, c2;
-  let tries = 0;
-  do {
-    const i1 = Math.floor(Math.random() * cells.length);
-    let i2 = Math.floor(Math.random() * (cells.length - 1));
-    if (i2 >= i1) i2++;
-    [r1, c1] = cells[i1];
-    [r2, c2] = cells[i2];
-    tries++;
-    // "at least one cell apart in both cardinal directions" = differ by ≥ 2 in row AND column
-  } while ((Math.abs(r1-r2) < 2 || Math.abs(c1-c2) < 2) && tries < 200);
+  // ─── RESIZE ──────────────────────────────────────────────────
+  window.addEventListener('resize', () => { if (board) renderBoard(board, null, null); });
 
-  board[r1][c1] = 2;
-  board[r2][c2] = 2;
-  startingTwoPositions = [{r: r1, c: c1}, {r: r2, c: c2}];
-
-  updateScoreDisplay();
-  prevBoard = null;
-  renderBoard(board, null, null);
-}
-
-async function doMove(dir) {
-  if (calculatingMove) return;
-  if (over || (won && !keepPlaying)) return;
-
-  const { board: nb, score: gained, moved } = applyDirection(board, dir);
-  if (!moved) return;
-
-  calculatingMove = true;
-
-  const oldBoard = board.map(r => [...r]);
-  board = nb;
-  score += gained;
-  if (score > best) { best = score; localStorage.setItem('devious2048best', best); }
-  moveCount++;
-
-  // Detect merged cells
-  const mergeCells = [];
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) {
-    if (nb[r][c] && nb[r][c] > (oldBoard[r][c]||0) && nb[r][c] === (oldBoard[r][c]||0)*2)
-      mergeCells.push([r,c]);
-  }
-
-  if (gained) showScoreDelta(gained);
-  updateScoreDisplay();
-
-  // Paint the board with merged tiles immediately, before the thinking starts
-  renderBoard(board, null, mergeCells);
-
-  // Check win
-  if (!won)
-    for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++)
-      if (board[r][c] === 2048) { won = true; break; }
-
-  // Run devious spawn behind the thinking overlay.
-  // withThinkingOverlay ensures the overlay is painted BEFORE computation begins.
-  let spawnResult = null;
-  if (cellsAvailable(board)) {
-    spawnResult = await withThinkingOverlay(() => deviousSpawn(board, moveCount));
-    board[spawnResult.chosen.r][spawnResult.chosen.c] = spawnResult.chosen.val;
-  }
-
-  calculatingMove = false;
-
-  renderBoard(board, spawnResult, null);
-
-  if (!movesAvailable(board)) {
-    over = true;
-    setTimeout(() => showOverlay('lost'), 400);
-  } else if (won && !keepPlaying) {
-    setTimeout(() => showOverlay('won'), 400);
-  }
-}
-
-// ─── INPUT ────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  const dirMap = { ArrowLeft:0,a:0,A:0, ArrowUp:1,w:1,W:1, ArrowRight:2,d:2,D:2, ArrowDown:3,s:3,S:3 };
-  if (dirMap[e.key] !== undefined) { e.preventDefault(); doMove(dirMap[e.key]); }
-});
-
-let touchStartX = null, touchStartY = null;
-document.getElementById('board-wrap').addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-document.getElementById('board-wrap').addEventListener('touchend', e => {
-  if (touchStartX === null) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const dy = e.changedTouches[0].clientY - touchStartY;
-  const adx = Math.abs(dx), ady = Math.abs(dy);
-  if (Math.max(adx, ady) < 20) return;
-  if (adx > ady) doMove(dx > 0 ? 2 : 0);
-  else            doMove(dy > 0 ? 3 : 1);
-  touchStartX = touchStartY = null;
-});
-
-// ─── BUTTONS ─────────────────────────────────────────────────
-document.getElementById('btn-new').addEventListener('click', initGame);
-document.getElementById('btn-retry').addEventListener('click', initGame);
-document.getElementById('btn-keep').addEventListener('click', () => { keepPlaying = true; hideOverlay(); });
-
-// ─── RESIZE ──────────────────────────────────────────────────
-window.addEventListener('resize', () => { if (board) renderBoard(board, null, null); });
-
-// ─── START ───────────────────────────────────────────────────
-initGame();
-</script>
-</body>
-</html>
+  // ─── START ───────────────────────────────────────────────────
+  initGame();
+  </script>
+  </body>
+  </html>
