@@ -109,18 +109,6 @@
   .btn-new:hover { opacity: 0.85; transform: translateY(-1px); }
   .btn-new:active { transform: translateY(0); }
 
-  /* ── SPAWN PREVIEW ── */
-  .spawn-preview {
-    margin-bottom: 16px; background: var(--panel);
-    border: 1px solid rgba(255,255,255,0.07); border-radius: 8px;
-    padding: 10px 14px; display: flex; align-items: center; gap: 10px; min-height: 50px;
-  }
-  .spawn-preview .sp-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--subtext); flex-shrink: 0; }
-  .candidates-row { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
-  .candidate-chip { border-radius: 5px; padding: 4px 9px; font-size: 12px; font-weight: 700; transition: transform 0.2s, box-shadow 0.2s; opacity: 0.5; transform: scale(0.92); }
-  .candidate-chip.chosen { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px currentColor; }
-  .sp-winner { font-size: 11px; color: var(--accent); font-weight: 600; flex-shrink: 0; }
-
   /* ── BOARD ── */
   .board-wrap {
     position: relative;
@@ -241,12 +229,6 @@
 
   <div class="controls">
     <button class="btn-new" id="btn-new">New Game</button>
-  </div>
-
-  <div class="spawn-preview">
-    <div class="sp-label">Last spawn</div>
-    <div class="candidates-row" id="candidates-row"></div>
-    <div class="sp-winner" id="sp-winner"></div>
   </div>
 
   <div class="board-wrap" id="board-wrap">
@@ -721,23 +703,6 @@ function renderBoard(newBoard, spawnResult, mergeCells) {
   prevBoard = newBoard.map(r => [...r]);
 }
 
-function renderSpawnPreview(spawnResult) {
-  const row    = document.getElementById('candidates-row');
-  const winner = document.getElementById('sp-winner');
-  if (!spawnResult) { row.innerHTML = ''; winner.textContent = ''; return; }
-  row.innerHTML = '';
-  spawnResult.candidates.slice(0, 10).forEach((cand, i) => {
-    const chip = document.createElement('div');
-    chip.className = 'candidate-chip' + (i === 0 ? ' chosen' : '');
-    chip.textContent = cand.val;
-    chip.style.background = chipColor(cand.val);
-    chip.style.color = '#fff';
-    row.appendChild(chip);
-  });
-  const { r, c } = spawnResult.chosen;
-  winner.textContent = `→ row ${r+1}, col ${c+1}`;
-}
-
 // ─── SCORE DISPLAY ────────────────────────────────────────────
 function showScoreDelta(delta) {
   if (!delta) return;
@@ -805,8 +770,6 @@ function initGame() {
   startingTwoPositions = [{r: r1, c: c1}, {r: r2, c: c2}];
 
   updateScoreDisplay();
-  document.getElementById('candidates-row').innerHTML = '';
-  document.getElementById('sp-winner').textContent = '';
   prevBoard = null;
   renderBoard(board, null, null);
 }
@@ -855,7 +818,6 @@ async function doMove(dir) {
   calculatingMove = false;
 
   renderBoard(board, spawnResult, null);
-  renderSpawnPreview(spawnResult);
 
   if (!movesAvailable(board)) {
     over = true;
