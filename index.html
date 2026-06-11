@@ -405,6 +405,26 @@ function countFutureMerges(b) {
 }
 
 // ─────────────────────────────────────────────
+// SLIDING MERGES AVAILABLE (all 4 dirs)
+// Used for the lookahead penalty.
+// ─────────────────────────────────────────────
+
+function createsSlideMerge(b, r, c, val) {
+    const tmp = b.map(row => row.slice());
+    tmp[r][c] = val;
+
+    for (let dir = 0; dir < 4; dir++) {
+        const { score } = applyDirection(tmp, dir);
+
+        if (score > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ─────────────────────────────────────────────
 // BLOCK BIG TILE FROM CORNERS / WALLS
 // Returns a bonus for placing at (r,c) if it obstructs the path
 // of the largest tile toward its nearest corner or wall.
@@ -561,6 +581,7 @@ function deviousSpawn(b, mc) {
     for (const [r, c] of empty) {
         for (const val of [2, 4]) {
             if (isImmediatelyMergeable(r, c, val)) continue;
+            if (createsSlideMerge(b, r, c, val)) continue;
 
             const tmp = b.map(row => row.slice());
             tmp[r][c] = val;
