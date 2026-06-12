@@ -104,18 +104,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 20px;
-            }
-
-            .tagline {
-                font-size: 13px;
-                color: var(--subtext);
-                max-width: 300px;
-                line-height: 1.4;
-            }
-
-            .tagline strong {
-                color: var(--accent);
+                margin-bottom: 14px;
+                gap: 12px;
             }
 
             .btn-new {
@@ -141,6 +131,84 @@
 
             .btn-new:active {
                 transform: translateY(0);
+            }
+
+            /* ── Depth control ── */
+            .depth-control {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .depth-control label {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--subtext);
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .depth-control input[type=range] {
+                -webkit-appearance: none;
+                appearance: none;
+                flex: 1;
+                height: 4px;
+                border-radius: 2px;
+                background: rgba(255,255,255,0.12);
+                outline: none;
+                cursor: pointer;
+            }
+
+            .depth-control input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--accent2);
+                cursor: pointer;
+                transition: transform 0.1s;
+            }
+
+            .depth-control input[type=range]::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+            }
+
+            .depth-control input[type=range]::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--accent2);
+                border: none;
+                cursor: pointer;
+            }
+
+            .depth-badge {
+                background: var(--panel);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 5px;
+                padding: 4px 10px;
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--accent2);
+                min-width: 36px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+            .depth-warn {
+                font-size: 10px;
+                color: var(--accent);
+                font-weight: 600;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                text-align: center;
+                margin-bottom: 10px;
+                min-height: 14px;
+                transition: opacity 0.2s;
             }
 
             .board-wrap {
@@ -200,29 +268,14 @@
             }
 
             @keyframes pop-in {
-                from {
-                    transform: scale(0);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: scale(1);
-                    opacity: 1;
-                }
+                from { transform: scale(0); opacity: 0; }
+                to   { transform: scale(1); opacity: 1; }
             }
 
             @keyframes merge-pop {
-                0% {
-                    transform: scale(1);
-                }
-
-                50% {
-                    transform: scale(1.18);
-                }
-
-                100% {
-                    transform: scale(1);
-                }
+                0%   { transform: scale(1); }
+                50%  { transform: scale(1.18); }
+                100% { transform: scale(1); }
             }
 
             .thinking-overlay {
@@ -250,6 +303,10 @@
                 pointer-events: auto;
             }
 
+            .thinking-overlay:not(.visible) {
+                transition: none;
+            }
+
             .thinking-spinner {
                 width: 32px;
                 height: 32px;
@@ -260,9 +317,7 @@
             }
 
             @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
+                to { transform: rotate(360deg); }
             }
 
             .overlay {
@@ -285,13 +340,8 @@
             }
 
             @keyframes fadein {
-                from {
-                    opacity: 0;
-                }
-
-                to {
-                    opacity: 1;
-                }
+                from { opacity: 0; }
+                to   { opacity: 1; }
             }
 
             .overlay h2 {
@@ -300,13 +350,8 @@
                 letter-spacing: -1px;
             }
 
-            .overlay.won h2 {
-                color: var(--accent2);
-            }
-
-            .overlay.lost h2 {
-                color: var(--accent);
-            }
+            .overlay.won h2  { color: var(--accent2); }
+            .overlay.lost h2 { color: var(--accent); }
 
             .overlay p {
                 font-size: 14px;
@@ -338,9 +383,7 @@
                 background: rgba(255, 255, 255, 0.1);
             }
 
-            .overlay-btn:hover {
-                opacity: 0.8;
-            }
+            .overlay-btn:hover { opacity: 0.8; }
 
             .score-delta {
                 position: absolute;
@@ -353,15 +396,8 @@
             }
 
             @keyframes float-up {
-                from {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-
-                to {
-                    opacity: 0;
-                    transform: translateY(-40px);
-                }
+                from { opacity: 1; transform: translateY(0); }
+                to   { opacity: 0; transform: translateY(-40px); }
             }
 
             .instructions {
@@ -372,77 +408,21 @@
                 text-align: center;
             }
 
-            .instructions strong {
-                color: var(--text);
-            }
+            .instructions strong { color: var(--text); }
 
-            .t2 {
-                background: #111B25;
-                color: #ccc;
-            }
-
-            .t4 {
-                background: #121F37;
-                color: #ccd;
-            }
-
-            .t8 {
-                background: #0D4E86;
-                color: #fff;
-            }
-
-            .t16 {
-                background: #0A6A9C;
-                color: #fff;
-            }
-
-            .t32 {
-                background: #0983A0;
-                color: #fff;
-            }
-
-            .t64 {
-                background: #09A1C4;
-                color: #fff;
-            }
-
-            .t128 {
-                background: #12308D;
-                color: #fff;
-                font-size: 26px;
-            }
-
-            .t256 {
-                background: #12339E;
-                color: #fff;
-                font-size: 26px;
-            }
-
-            .t512 {
-                background: #1237AF;
-                color: #fff;
-                font-size: 26px;
-            }
-
-            .t1024 {
-                background: #123AC0;
-                color: #fff;
-                font-size: 22px;
-            }
-
-            .t2048 {
-                background: #123DD1;
-                color: #fff;
-                font-size: 22px;
-                box-shadow: 0 0 24px rgba(229, 69, 96, 0.6);
-            }
-
-            .tsuper {
-                background: #C3C5CD;
-                color: #333333;
-                font-size: 18px;
-                box-shadow: 0 0 24px rgba(155, 89, 182, 0.5);
-            }
+            /* ── Tile colours ── */
+            .t2    { background: #111B25; color: #ccc; }
+            .t4    { background: #121F37; color: #ccd; }
+            .t8    { background: #0D4E86; color: #fff; }
+            .t16   { background: #0A6A9C; color: #fff; }
+            .t32   { background: #0983A0; color: #fff; }
+            .t64   { background: #09A1C4; color: #fff; }
+            .t128  { background: #12308D; color: #fff; font-size: 26px; }
+            .t256  { background: #12339E; color: #fff; font-size: 26px; }
+            .t512  { background: #1237AF; color: #fff; font-size: 26px; }
+            .t1024 { background: #123AC0; color: #fff; font-size: 22px; }
+            .t2048 { background: #123DD1; color: #fff; font-size: 22px; box-shadow: 0 0 24px rgba(229,69,96,0.6); }
+            .tsuper{ background: #C3C5CD; color: #333; font-size: 18px; box-shadow: 0 0 24px rgba(155,89,182,0.5); }
 
             @media (max-width: 520px) {
                 :root {
@@ -450,29 +430,11 @@
                     --tile-size: 60px;
                     --board-size: 280px;
                 }
-
-                .tile {
-                    font-size: 20px;
-                }
-
-                .t128,
-                .t256,
-                .t512 {
-                    font-size: 16px;
-                }
-
-                .t1024,
-                .t2048 {
-                    font-size: 13px;
-                }
-
-                .tsuper {
-                    font-size: 11px;
-                }
-
-                .title-block h1 {
-                    font-size: 48px;
-                }
+                .tile { font-size: 20px; }
+                .t128,.t256,.t512 { font-size: 16px; }
+                .t1024,.t2048     { font-size: 13px; }
+                .tsuper           { font-size: 11px; }
+                .title-block h1   { font-size: 48px; }
             }
         </style>
     </head>
@@ -493,31 +455,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Depth slider -->
             <div class="controls">
                 <button class="btn-new" id="btn-new">New Game</button>
             </div>
+
             <div class="board-wrap" id="board-wrap">
                 <div class="grid-layer">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
+                    <div class="grid-cell"></div><div class="grid-cell"></div>
                 </div>
                 <div class="tile-layer" id="tile-layer"></div>
                 <div class="thinking-overlay" id="thinking-overlay">
-                    <div class="thinking-spinner"></div> Calculating most evil move…
+                    <div class="thinking-spinner"></div>
+                    <span id="thinking-label">Calculating most evil move…</span>
                 </div>
                 <div class="overlay" id="overlay">
                     <h2 id="overlay-title"></h2>
@@ -529,870 +487,612 @@
                 </div>
             </div>
             <p class="instructions">
-                <strong>Arrow keys</strong> or <strong>WASD</strong> to move &nbsp;·&nbsp; Swipe on mobile <br> Version 1.6
+                <strong>Arrow keys</strong> or <strong>WASD</strong> to move &nbsp;·&nbsp; Swipe on mobile <br>
+                Version 2.0
             </p>
         </div>
+
         <script>
-            // ─── CONSTANTS ───────────────────────────────────────────────
-            const SIZE = 4;
+        // ─── CONSTANTS ───────────────────────────────────────────────────────────────
+        const SIZE = 4;
 
-            function tileSize() {
-                return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-size')) || 105;
-            }
+        // Tile spawn probabilities (standard 2048 rules)
+        const SPAWN_PROB = { 2: 0.9, 4: 0.1 };
 
-            function tileGap() {
-                return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-gap')) || 12;
-            }
+        function getMaxDepth() { return 5; }
 
-            function tileOffset(idx) {
-                const g = tileGap(),
-                    s = tileSize();
-                return g + idx * (s + g);
-            }
-            // ─── GAME STATE ───────────────────────────────────────────────
-            let board, score, best, over, won, keepPlaying;
-            let calculatingMove = false;
-            let moveCount = 0;
-            let startingTwoPositions = [];
-            best = parseInt(localStorage.getItem('devious2048best') || '0');
+        // ─── BOARD HELPERS ───────────────────────────────────────────────────────────
+        function tileSize() {
+            return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-size')) || 105;
+        }
+        function tileGap() {
+            return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-gap')) || 12;
+        }
+        function tileOffset(idx) {
+            const g = tileGap(), s = tileSize();
+            return g + idx * (s + g);
+        }
 
-            function emptyBoard() {
-                return Array.from({
-                    length: SIZE
-                }, () => Array(SIZE).fill(0));
-            }
+        function emptyBoard() {
+            return Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+        }
+        function cellsAvailable(b) {
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++)
+                    if (!b[r][c]) return true;
+            return false;
+        }
+        function availableCells(b) {
+            const cells = [];
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++)
+                    if (!b[r][c]) cells.push([r, c]);
+            return cells;
+        }
+        function maxTile(b) {
+            let m = 0;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) m = Math.max(m, b[r][c]);
+            return m;
+        }
+        function cloneBoard(b) { return b.map(r => r.slice()); }
 
-            function cellsAvailable(b) {
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++)
-                        if (!b[r][c]) return true;
-                return false;
-            }
+        // ─── GAME STATE ──────────────────────────────────────────────────────────────
+        let board, score, best, over, won, keepPlaying;
+        let calculatingMove = false;
+        let moveCount = 0;
+        best = parseInt(localStorage.getItem('devious2048best') || '0');
 
-            function availableCells(b) {
-                const cells = [];
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++)
-                        if (!b[r][c]) cells.push([r, c]);
-                return cells;
-            }
+        // ─── THINKING OVERLAY ────────────────────────────────────────────────────────
+        function waitForPaint() {
+            return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        async function withThinkingOverlay(label, fn) {
+            const el = document.getElementById('thinking-overlay');
+            document.getElementById('thinking-label').textContent = label;
+            el.classList.add('visible');
+            await waitForPaint();
+            const result = fn();
+            el.classList.remove('visible');
+            return result;
+        }
 
-            function maxTile(b) {
-                let m = 0;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++) m = Math.max(m, b[r][c]);
-                return m;
-            }
-            // ─── THINKING OVERLAY ─────────────────────────────────────────
-            function waitForPaint() {
-                return new Promise(resolve => {
-                    requestAnimationFrame(() => requestAnimationFrame(resolve));
-                });
-            }
-            async function withThinkingOverlay(fn) {
-                const el = document.getElementById('thinking-overlay');
-                el.classList.add('visible');
-                await waitForPaint();
-                const result = fn();
-                el.classList.remove('visible');
-                return result;
-            }
-            // ─── MOVEMENT LOGIC ───────────────────────────────────────────
-            function slideRow(row) {
-                let tiles = row.filter(v => v);
-                let gainedScore = 0;
-                const out = [];
-                for (let i = 0; i < tiles.length; i++) {
-                    if (i + 1 < tiles.length && tiles[i] === tiles[i + 1]) {
-                        const val = tiles[i] * 2;
-                        out.push({
-                            val,
-                            merged: true
-                        });
-                        gainedScore += val;
-                        i++;
-                    } else {
-                        out.push({
-                            val: tiles[i],
-                            merged: false
-                        });
-                    }
-                }
-                while (out.length < SIZE) out.push({
-                    val: 0,
-                    merged: false
-                });
-                return {
-                    row: out,
-                    score: gainedScore
-                };
-            }
-
-            function rotateBoard(b) {
-                const out = emptyBoard();
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++) out[c][SIZE - 1 - r] = b[r][c];
-                return out;
-            }
-
-            function moveLeft(b) {
-                let totalScore = 0,
-                    moved = false;
-                const newBoard = emptyBoard();
-                for (let r = 0; r < SIZE; r++) {
-                    const {
-                        row,
-                        score
-                    } = slideRow(b[r]);
-                    totalScore += score;
-                    for (let c = 0; c < SIZE; c++) newBoard[r][c] = row[c].val;
-                    if (b[r].join() !== newBoard[r].join()) moved = true;
-                }
-                return {
-                    board: newBoard,
-                    score: totalScore,
-                    moved
-                };
-            }
-
-            function applyDirection(b, dir) {
-                const rotations = [0, 3, 2, 1][dir];
-                let cur = b;
-                for (let i = 0; i < rotations; i++) cur = rotateBoard(cur);
-                const res = moveLeft(cur);
-                const unrot = (4 - rotations) % 4;
-                let nb = res.board;
-                for (let i = 0; i < unrot; i++) nb = rotateBoard(nb);
-                return {
-                    board: nb,
-                    score: res.score,
-                    moved: res.moved
-                };
-            }
-
-            function movesAvailable(b) {
-                if (cellsAvailable(b)) return true;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++) {
-                        const v = b[r][c];
-                        if (r + 1 < SIZE && b[r + 1][c] === v) return true;
-                        if (c + 1 < SIZE && b[r][c + 1] === v) return true;
-                    }
-                return false;
-            }
-            // ─── BIG-TILE POSITION ANALYSIS ───────────────────────────────
-            // How many walls/edges is this position touching? 0=interior, 1=edge, 2=corner
-            function anchorLevel(r, c) {
-                const onRow = (r === 0 || r === SIZE - 1) ? 1 : 0;
-                const onCol = (c === 0 || c === SIZE - 1) ? 1 : 0;
-                return onRow + onCol;
-            }
-            // Manhattan distance from nearest wall (0 = on wall, 1 = one away, etc.)
-            function wallDistance(r, c) {
-                return Math.min(r, SIZE - 1 - r, c, SIZE - 1 - c);
-            }
-            // Find the biggest tile and its position on board b
-            function findBigTile(b) {
-                let bigVal = 0,
-                    bigR = 0,
-                    bigC = 0;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++)
-                        if (b[r][c] > bigVal) {
-                            bigVal = b[r][c];
-                            bigR = r;
-                            bigC = c;
-                        }
-                return {
-                    val: bigVal,
-                    r: bigR,
-                    c: bigC
-                };
-            }
-            // After a move in direction dir, where does the big tile end up?
-            // Returns { r, c } of the largest tile in the resulting board.
-            function bigTileAfterMove(b, dir) {
-                const {
-                    board: nb,
-                    moved
-                } = applyDirection(b, dir);
-                if (!moved) return null;
-                const {
-                    r,
-                    c
-                } = findBigTile(nb);
-                return {
-                    r,
-                    c,
-                    board: nb
-                };
-            }
-            // ─── CORNER-ESCAPE SCORE ──────────────────────────────────────
-            // This replaces bigTileBlockScore with a fundamentally different goal:
-            // instead of blocking the big tile's path TO a corner, we force it AWAY
-            // from wherever it's currently anchored.
-            //
-            // Strategy:
-            //   1. Find the big tile and measure how anchored it is (corner/edge/interior).
-            //   2. For each of the 4 player moves, simulate the result and score it:
-            //      - If the big tile stays at its current anchor level → "safe move" for player
-            //      - If the big tile moves to a LESS anchored position → "escape move" for player
-            //   3. Reward spawns that ELIMINATE safe moves (forces player into escape moves).
-            //   4. Also directly reward placements that, in one slide, would physically
-            //      dislodge the big tile (i.e. block the adjacent empty cell it hides behind).
-            function cornerEscapeScore(b, spawnR, spawnC, spawnVal) {
-                const big = findBigTile(b);
-                if (!big.val) return 0;
-                const bigAnchor = anchorLevel(big.r, big.c);
-                // Only care about this mechanism when the big tile is anchored (edge or corner).
-                // An interior big tile doesn't need escaping — other heuristics handle that.
-                if (bigAnchor === 0) return 0;
-                // Build the board with the proposed spawn
-                const tmp = b.map(row => row.slice());
-                tmp[spawnR][spawnC] = spawnVal;
-                // ── Part 1: Count how many moves keep big tile anchored vs. free it ──
-                let safeMovesBefore = 0; // moves on current board that keep big anchored
-                let safeMovesAfter = 0; // moves on spawned board that keep big anchored
-                for (let dir = 0; dir < 4; dir++) {
-                    // On original board
-                    const origResult = bigTileAfterMove(b, dir);
-                    if (origResult) {
-                        const newAnchor = anchorLevel(origResult.r, origResult.c);
-                        if (newAnchor >= bigAnchor) safeMovesBefore++;
-                    }
-                    // On board after this spawn
-                    const spawnResult = bigTileAfterMove(tmp, dir);
-                    if (spawnResult) {
-                        const newAnchor = anchorLevel(spawnResult.r, spawnResult.c);
-                        if (newAnchor >= bigAnchor) safeMovesAfter++;
-                    }
-                }
-                // Reward = how many "safe" moves we eliminated with this spawn
-                const safeMovesEliminated = safeMovesBefore - safeMovesAfter;
-                // Weight heavily by big tile value: dislodging a 512 matters far more than a 4
-                const anchorBonus = safeMovesEliminated * big.val * big.val * 0.5;
-                // Big bonus if we eliminate ALL safe moves (player has no choice but to move big tile)
-                const noSafeMoveBonus = (safeMovesAfter === 0 && safeMovesBefore > 0) ? big.val * big.val * 2 : 0;
-                // ── Part 2: Physical adjacency — spawning next to the big tile ──
-                // If we spawn directly adjacent to the big tile's "shelter" side
-                // (the side facing away from the corner it's in), it blocks retreat.
-                //
-                // Determine which directions the big tile is NOT walled in.
-                // Those are the "open" sides — spawning there is most disruptive.
-                let adjacencyBonus = 0;
-                const dirs = [
-                    [-1, 0],
-                    [1, 0],
-                    [0, -1],
-                    [0, 1]
-                ];
-                for (const [dr, dc] of dirs) {
-                    const nr = big.r + dr,
-                        nc = big.c + dc;
-                    if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) continue; // wall side, skip
-                    if (nr === spawnR && nc === spawnC) {
-                        // We're spawning directly adjacent to the big tile on an open side.
-                        // Check: does this adjacency actually force a slide that moves the big tile?
-                        // It does if the big tile can no longer slide in this direction to stay put.
-                        adjacencyBonus += big.val * 50;
-                    }
-                }
-                // ── Part 3: Trap the tile against the opposite wall ──
-                // If the big tile is in a corner, the TWO walls that DON'T touch it
-                // are its "escape walls". Spawning on the row or column between the
-                // big tile and those walls makes it harder to escape to the interior.
-                let trapBonus = 0;
-                if (bigAnchor === 2) {
-                    // It's in a corner — identify the escape direction (interior row/col)
-                    // Corner at (bigR, bigC): escape rows are away from the edge it's on.
-                    const escapeRow = (big.r === 0) ? 1 : SIZE - 2; // one step away from the row wall
-                    const escapeCol = (big.c === 0) ? 1 : SIZE - 2; // one step away from the col wall
-                    // Spawning at (escapeRow, bigC) or (bigR, escapeCol) blocks the first step out
-                    if ((spawnR === escapeRow && spawnC === big.c) || (spawnR === big.r && spawnC === escapeCol)) {
-                        trapBonus += big.val * big.val * 0.3;
-                    }
-                }
-                return anchorBonus + noSafeMoveBonus + adjacencyBonus + trapBonus;
-            }
-
-            function bigTileBlockScore(b, spawnR, spawnC) {
-                // 1. Find the biggest tile and its position.
-                let bigVal = 0,
-                    bigR = 0,
-                    bigC = 0;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++)
-                        if (b[r][c] > bigVal) {
-                            bigVal = b[r][c];
-                            bigR = r;
-                            bigC = c;
-                        }
-                if (bigVal === 0) return 0;
-                // 2. Determine the nearest corner to the big tile.
-                //    Corners: (0,0) (0,3) (3,0) (3,3)
-                const corners = [
-                    [0, 0],
-                    [0, SIZE - 1],
-                    [SIZE - 1, 0],
-                    [SIZE - 1, SIZE - 1]
-                ];
-                let bestCorner = corners[0],
-                    bestDist = Infinity;
-                for (const [cr, cc] of corners) {
-                    const d = Math.abs(bigR - cr) + Math.abs(bigC - cc);
-                    if (d < bestDist) {
-                        bestDist = d;
-                        bestCorner = [cr, cc];
-                    }
-                }
-                const [tgtR, tgtC] = bestCorner;
-                // 3. The 'escape corridor' is every cell in the big tile's row toward
-                //    the target corner's column, AND every cell in its column toward
-                //    the target corner's row — the two legs of the L-shaped path.
-                //    We also include the wall cells (full target row and target column)
-                //    since the player may slide the tile all the way to the edge first.
-                let bonus = 0;
-                // Cells between bigC and tgtC in bigR's row (horizontal leg)
-                const minC = Math.min(bigC, tgtC),
-                    maxC = Math.max(bigC, tgtC);
-                const minR = Math.min(bigR, tgtR),
-                    maxR = Math.max(bigR, tgtR);
-                const onHorizLeg = (spawnR === bigR && spawnC >= minC && spawnC <= maxC);
-                const onVertLeg = (spawnC === bigC && spawnR >= minR && spawnR <= maxR);
-                // Also reward blocking the target wall row/col (where big tile would park)
-                const onTargetRow = (spawnR === tgtR && spawnC >= minC && spawnC <= maxC);
-                const onTargetCol = (spawnC === tgtC && spawnR >= minR && spawnR <= maxR);
-                if (onHorizLeg || onVertLeg || onTargetRow || onTargetCol) {
-                    // Weight by big tile value so blocking a 512 matters far more than blocking an 8
-                    const proximity = 1 + bestDist; // closer big tile → higher urgency
-                    bonus += (bigVal * bigVal) / proximity;
-                }
-                // Extra: if the spawn cell is literally the target corner, max bonus
-                if (spawnR === tgtR && spawnC === tgtC) bonus += bigVal * bigVal * 2;
-                return bonus;
-            }
-            // ─── HELPER SCORING FUNCTIONS ─────────────────────────────────
-            function simulatePlayerBest(b) {
-                let best = -Infinity;
-                for (let dir = 0; dir < 4; dir++) {
-                    const {
-                        board: nb,
-                        moved,
-                        score
-                    } = applyDirection(b, dir);
-                    if (!moved) continue;
-                    let mergeScore = 0;
-                    for (let r = 0; r < SIZE; r++) {
-                        for (let c = 0; c < SIZE; c++) {
-                            const v = nb[r][c];
-                            if (!v) continue;
-                            if (c + 1 < SIZE && nb[r][c + 1] === v) mergeScore += v * v;
-                            if (r + 1 < SIZE && nb[r + 1][c] === v) mergeScore += v * v;
-                        }
-                    }
-                    best = Math.max(best, mergeScore + score * score);
-                }
-                return best === -Infinity ? 0 : best;
-            }
-
-            function countFutureMerges(b) {
-                let total = 0;
-                for (let dir = 0; dir < 4; dir++) {
-                    const {
-                        board: nb,
-                        moved,
-                        score
-                    } = applyDirection(b, dir);
-                    if (!moved) continue;
-                    for (let r = 0; r < SIZE; r++) {
-                        for (let c = 0; c < SIZE; c++) {
-                            const v = nb[r][c];
-                            if (!v) continue;
-                            if (c + 1 < SIZE && nb[r][c + 1] === v) total += v * v;
-                            if (r + 1 < SIZE && nb[r + 1][c] === v) total += v * v;
-                        }
-                    }
-                }
-                return total;
-            }
-
-            function createsSlideMerge(b, r, c, val) {
-                const tmp = b.map(row => row.slice());
-                tmp[r][c] = val;
-                for (let dir = 0; dir < 4; dir++) {
-                    const {
-                        score
-                    } = applyDirection(tmp, dir);
-                    if (score > 0) return true;
-                }
-                return false;
-            }
-
-            function monotonicityScore(b) {
-                let score = 0;
-                for (let r = 0; r < SIZE; r++) {
-                    for (let c = 0; c < SIZE - 1; c++) {
-                        const a = b[r][c],
-                            d = b[r][c + 1];
-                        if (!a || !d) continue;
-                        score -= Math.abs(Math.log2(a) - Math.log2(d));
-                    }
-                }
-                for (let c = 0; c < SIZE; c++) {
-                    for (let r = 0; r < SIZE - 1; r++) {
-                        const a = b[r][c],
-                            d = b[r + 1][c];
-                        if (!a || !d) continue;
-                        score -= Math.abs(Math.log2(a) - Math.log2(d));
-                    }
-                }
-                return score;
-            }
-
-            function snakeScore(b) {
-                const snakeWeights = [
-                    [65536, 32768, 16384, 8192],
-                    [512, 1024, 2048, 4096],
-                    [256, 128, 64, 32],
-                    [2, 4, 8, 16]
-                ];
-                let score = 0;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++) score += b[r][c] * snakeWeights[r][c];
-                return score;
-            }
-
-            function emptySpaceScore(b) {
-                let count = 0;
-                for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++)
-                        if (b[r][c] === 0) count++;
-                return count;
-            }
-
-            function evaluateBoardForPlayer(b) {
-                return (snakeScore(b) * 0.0001 + monotonicityScore(b) * 50 + emptySpaceScore(b) * 500 + maxTile(b));
-            }
-
-            function minimaxPlayer(b, depth) {
-                if (depth <= 0) return evaluateBoardForPlayer(b);
-                let best = -Infinity;
-                for (let dir = 0; dir < 4; dir++) {
-                    const result = applyDirection(b, dir);
-                    if (!result.moved) continue;
-                    best = Math.max(best, minimaxSpawner(result.board, depth - 1));
-                }
-                return best === -Infinity ? evaluateBoardForPlayer(b) : best;
-            }
-
-            function minimaxSpawner(b, depth) {
-                const empty = availableCells(b);
-                if (!empty.length) return evaluateBoardForPlayer(b);
-                let worst = Infinity;
-                for (const [r, c] of empty) {
-                    for (const val of [2, 4]) {
-                        const tmp = b.map(row => row.slice());
-                        tmp[r][c] = val;
-                        worst = Math.min(worst, minimaxPlayer(tmp, depth));
-                    }
-                }
-                return worst;
-            }
-
-            function spawnMinimaxScore(b, r, c, val, depth) {
-                const tmp = b.map(row => row.slice());
-                tmp[r][c] = val;
-                return minimaxPlayer(tmp, depth);
-            }
-            // ─── MIDPOINT HELPER ──────────────────────────────────────────
-            function midpointCell(b, p1, p2) {
-                const mr = (p1.r + p2.r) / 2;
-                const mc = (p1.c + p2.c) / 2;
-                const empty = availableCells(b);
-                if (!empty.length) return null;
-                empty.sort((a, b) => {
-                    const da = (a[0] - mr) ** 2 + (a[1] - mc) ** 2;
-                    const db = (b[0] - mr) ** 2 + (b[1] - mc) ** 2;
-                    return da - db;
-                });
-                return {
-                    r: empty[0][0],
-                    c: empty[0][1]
-                };
-            }
-            // ─── CORE SPAWN IMPACT SCORE ──────────────────────────────────
-            function spawnImpactScore(b, r, c, val) {
-                let tmp = b.map(row => row.slice());
-                tmp[r][c] = val;
-                const base = simulatePlayerBest(b);
-                const after = simulatePlayerBest(tmp);
-                const improvement = after - base;
-                let sc = -improvement;
-                const dirs = [
-                    [-1, 0],
-                    [1, 0],
-                    [0, -1],
-                    [0, 1]
-                ];
-                for (const [dr, dc] of dirs) {
-                    const nr = r + dr,
-                        nc = c + dc;
-                    if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE) {
-                        const neighbor = b[nr][nc];
-                        if (neighbor === val) {
-                            sc += 100 + val * val;
-                        } else if (neighbor > val) {
-                            sc += neighbor * 5;
-                        }
-                    }
-                }
-                const futureMergesAfter = countFutureMerges(tmp);
-                sc -= futureMergesAfter;
-                let rowColMatches = 0;
-                for (let i = 0; i < SIZE; i++) {
-                    if (b[r][i] === val && i !== c) rowColMatches++;
-                    if (b[i][c] === val && i !== r) rowColMatches++;
-                }
-                sc += rowColMatches * val * 10;
-                // ── NEW: Corner-escape scoring (replaces bigTileBlockScore) ──
-                // This actively tries to dislodge the big tile from its corner/wall anchor.
-                sc += cornerEscapeScore(b, r, c, val);
-                sc += bigTileBlockScore(b, r, c);
-                // ── Monotonicity & snake disruption ──
-                tmp = b.map(row => row.slice());
-                tmp[r][c] = val;
-                const snakeBefore = snakeScore(b);
-                const snakeAfter = snakeScore(tmp);
-                const monoBefore = monotonicityScore(b);
-                const monoAfter = monotonicityScore(tmp);
-                const emptyAfter = emptySpaceScore(tmp);
-                sc += (snakeBefore - snakeAfter) * 0.01;
-                sc += (monoBefore - monoAfter) * 100;
-                sc += (16 - emptyAfter) * 500;
-                const futurePlayerValue = spawnMinimaxScore(b, r, c, val, 2);
-                sc -= futurePlayerValue;
-                return sc;
-            }
-            // ─── MAIN SPAWN FUNCTION ──────────────────────────────────────
-            function deviousSpawn(b, mc) {
-                const empty = availableCells(b);
-                if (!empty.length) return null;
-                // Rule 2: After first move → place a 4 between the two 2s
-                if (mc === 1) {
-                    const twos = [];
-                    for (let r = 0; r < SIZE; r++)
-                        for (let c = 0; c < SIZE; c++)
-                            if (b[r][c] === 2) twos.push({
-                                r,
-                                c
-                            });
-                    if (twos.length === 2) {
-                        const mid = midpointCell(b, twos[0], twos[1]);
-                        if (mid) {
-                            const chosen = {
-                                r: mid.r,
-                                c: mid.c,
-                                val: 4,
-                                score: 9999
-                            };
-                            return {
-                                chosen,
-                                candidates: [chosen]
-                            };
-                        }
-                    }
-                }
-                const candidates = [];
-                const baseBoardScore = simulatePlayerBest(b);
-
-                function isImmediatelyMergeable(r, c, val) {
-                    const dirs = [
-                        [-1, 0],
-                        [1, 0],
-                        [0, -1],
-                        [0, 1]
-                    ];
-                    for (const [dr, dc] of dirs) {
-                        const nr = r + dr,
-                            nc = c + dc;
-                        if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && b[nr][nc] === val) return true;
-                    }
-                    return false;
-                }
-                for (const [r, c] of empty) {
-                    for (const val of [2, 4]) {
-                        if (isImmediatelyMergeable(r, c, val)) continue;
-                        let penalty = 0;
-                        if (createsSlideMerge(b, r, c, val)) penalty = 5000;
-                        let tmp = b.map(row => row.slice());
-                        tmp[r][c] = val;
-                        const afterScore = simulatePlayerBest(tmp);
-                        const delta = afterScore - baseBoardScore;
-                        const sc = spawnImpactScore(b, r, c, val);
-                        const finalScore = sc - penalty;
-                        if (delta > 50) continue;
-                        candidates.push({
-                            r,
-                            c,
-                            val,
-                            score: finalScore
-                        });
-                    }
-                }
-                // Fallback 1: drop delta filter
-                if (!candidates.length) {
-                    for (const [r, c] of empty) {
-                        for (const val of [2, 4]) {
-                            if (!isImmediatelyMergeable(r, c, val)) candidates.push({
-                                r,
-                                c,
-                                val,
-                                score: -99999
-                            });
-                        }
-                    }
-                }
-                // Fallback 2: anything goes
-                if (!candidates.length) {
-                    for (const [r, c] of empty) {
-                        for (const val of [2, 4]) {
-                            candidates.push({
-                                r,
-                                c,
-                                val,
-                                score: -99999
-                            });
-                        }
-                    }
-                }
-                candidates.sort((a, b) => b.score - a.score);
-                const bestScore = candidates[0].score;
-                const tied = candidates.filter(c => c.score === bestScore);
-                const chosen = tied[Math.floor(Math.random() * tied.length)];
-                return {
-                    chosen,
-                    candidates
-                };
-            }
-            // ─── TILE COLORS ─────────────────────────────────────────────
-            function tileClass(val) {
-                if (val === 2048) return 't2048';
-                if (val > 2048) return 'tsuper';
-                return {
-                    2: 't2',
-                    4: 't4',
-                    8: 't8',
-                    16: 't16',
-                    32: 't32',
-                    64: 't64',
-                    128: 't128',
-                    256: 't256',
-                    512: 't512',
-                    1024: 't1024'
-                } [val] || 't2';
-            }
-            // ─── RENDERING ────────────────────────────────────────────────
-            let prevBoard = null;
-
-            function renderBoard(newBoard, spawnResult, mergeCells) {
-                const layer = document.getElementById('tile-layer');
-                layer.innerHTML = '';
-                for (let r = 0; r < SIZE; r++) {
-                    for (let c = 0; c < SIZE; c++) {
-                        const val = newBoard[r][c];
-                        if (!val) continue;
-                        const el = document.createElement('div');
-                        el.className = 'tile ' + tileClass(val);
-                        el.textContent = val;
-                        el.style.left = tileOffset(c) + 'px';
-                        el.style.top = tileOffset(r) + 'px';
-                        el.style.width = tileSize() + 'px';
-                        el.style.height = tileSize() + 'px';
-                        if (spawnResult && r === spawnResult.chosen.r && c === spawnResult.chosen.c) el.classList.add('new-tile');
-                        if (mergeCells)
-                            for (const [mr, mc] of mergeCells)
-                                if (mr === r && mc === c) {
-                                    el.classList.add('merged-tile');
-                                    break;
-                                }
-                        layer.appendChild(el);
-                    }
-                }
-                prevBoard = newBoard.map(r => [...r]);
-            }
-            // ─── SCORE DISPLAY ────────────────────────────────────────────
-            function showScoreDelta(delta) {
-                if (!delta) return;
-                const el = document.createElement('div');
-                el.className = 'score-delta';
-                el.textContent = '+' + delta;
-                el.style.left = (Math.random() * 200 + 100) + 'px';
-                el.style.top = (Math.random() * 100 + 100) + 'px';
-                document.getElementById('board-wrap').appendChild(el);
-                setTimeout(() => el.remove(), 700);
-            }
-
-            function updateScoreDisplay() {
-                document.getElementById('score').textContent = score;
-                document.getElementById('best').textContent = best;
-            }
-            // ─── OVERLAY ──────────────────────────────────────────────────
-            function showOverlay(type) {
-                const ov = document.getElementById('overlay');
-                const title = document.getElementById('overlay-title');
-                const sub = document.getElementById('overlay-sub');
-                const keep = document.getElementById('btn-keep');
-                ov.className = 'overlay active ' + type;
-                if (type === 'won') {
-                    title.textContent = 'You won!';
-                    sub.textContent = 'Against all odds… keep going?';
-                    keep.style.display = 'inline-block';
+        // ─── MOVEMENT LOGIC ──────────────────────────────────────────────────────────
+        function slideRow(row) {
+            let tiles = row.filter(v => v);
+            let gainedScore = 0;
+            const out = [];
+            for (let i = 0; i < tiles.length; i++) {
+                if (i + 1 < tiles.length && tiles[i] === tiles[i + 1]) {
+                    const val = tiles[i] * 2;
+                    out.push({ val, merged: true });
+                    gainedScore += val;
+                    i++;
                 } else {
-                    title.textContent = 'Game Over';
-                    sub.textContent = 'Try better next time.';
-                    keep.style.display = 'none';
+                    out.push({ val: tiles[i], merged: false });
+                }
+            }
+            while (out.length < SIZE) out.push({ val: 0, merged: false });
+            return { row: out, score: gainedScore };
+        }
+
+        function rotateBoard(b) {
+            const out = emptyBoard();
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) out[c][SIZE - 1 - r] = b[r][c];
+            return out;
+        }
+
+        function moveLeft(b) {
+            let totalScore = 0, moved = false;
+            const newBoard = emptyBoard();
+            for (let r = 0; r < SIZE; r++) {
+                const { row, score } = slideRow(b[r]);
+                totalScore += score;
+                for (let c = 0; c < SIZE; c++) newBoard[r][c] = row[c].val;
+                if (b[r].join() !== newBoard[r].join()) moved = true;
+            }
+            return { board: newBoard, score: totalScore, moved };
+        }
+
+        function applyDirection(b, dir) {
+            const rotations = [0, 3, 2, 1][dir];
+            let cur = b;
+            for (let i = 0; i < rotations; i++) cur = rotateBoard(cur);
+            const res = moveLeft(cur);
+            const unrot = (4 - rotations) % 4;
+            let nb = res.board;
+            for (let i = 0; i < unrot; i++) nb = rotateBoard(nb);
+            return { board: nb, score: res.score, moved: res.moved };
+        }
+
+        function movesAvailable(b) {
+            if (cellsAvailable(b)) return true;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) {
+                    const v = b[r][c];
+                    if (r + 1 < SIZE && b[r + 1][c] === v) return true;
+                    if (c + 1 < SIZE && b[r][c + 1] === v) return true;
+                }
+            return false;
+        }
+
+        // ─── BOARD EVALUATION (leaf heuristic) ───────────────────────────────────────
+        // Weights tuned to make the spawner as evil as possible.
+        const SNAKE_WEIGHTS = [
+            [65536, 32768, 16384, 8192],
+            [  512,  1024,  2048, 4096],
+            [  256,   128,    64,   32],
+            [    2,     4,     8,   16]
+        ];
+
+        function snakeScore(b) {
+            let s = 0;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) s += b[r][c] * SNAKE_WEIGHTS[r][c];
+            return s;
+        }
+
+        function monotonicityScore(b) {
+            let s = 0;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE - 1; c++) {
+                    const a = b[r][c], d = b[r][c + 1];
+                    if (a && d) s -= Math.abs(Math.log2(a) - Math.log2(d));
+                }
+            for (let c = 0; c < SIZE; c++)
+                for (let r = 0; r < SIZE - 1; r++) {
+                    const a = b[r][c], d = b[r + 1][c];
+                    if (a && d) s -= Math.abs(Math.log2(a) - Math.log2(d));
+                }
+            return s;
+        }
+
+        function emptySpaceScore(b) {
+            let n = 0;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) if (!b[r][c]) n++;
+            return n;
+        }
+
+        function mergePotential(b) {
+            let score = 0;
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) {
+                    const v = b[r][c];
+                    if (!v) continue;
+                    if (c + 1 < SIZE && b[r][c + 1] === v) score += v;
+                    if (r + 1 < SIZE && b[r + 1][c] === v) score += v;
+                }
+            return score;
+        }
+
+        /**
+         * evaluateBoardForPlayer — higher is better for the PLAYER.
+         * The adversarial spawner will MINIMISE this value.
+         *
+         * Weights are normalised so no single term dominates:
+         *   snakeScore    ~ 0–100k  → scale 0.00001  → 0–1
+         *   monotonicity  ~ 0–24    → scale 1         → 0–24
+         *   emptySpace    ~ 0–16    → scale 10        → 0–160
+         *   mergePotential~ 0–8192  → scale 0.5       → 0–4096  (but rarely maxes)
+         *   log2(maxTile) ~ 0–11    → scale 20        → 0–220
+         */
+        function evaluateBoardForPlayer(b) {
+            return (
+                snakeScore(b)               * 0.00001 +
+                monotonicityScore(b)        * 1       +
+                emptySpaceScore(b)          * 10      +
+                mergePotential(b)           * 0.5     +
+                Math.log2(maxTile(b) + 1)   * 20
+            );
+        }
+
+        // ─── EXPECTIMINIMAX ──────────────────────────────────────────────────────────
+        //
+        // Tree structure:
+        //   MAX node  — player chooses a direction (maximises eval)
+        //   CHANCE node — spawner places a tile probabilistically:
+        //                  p=0.9 for value 2, p=0.1 for value 4
+        //                  (standard 2048) but we pick the cell adversarially
+        //                  (min over cells, expectation over values).
+        //
+        // We use "adversarial expectation": the spawner picks the WORST CELL
+        // but uses the real probability distribution over tile values (2/4).
+        // This is the standard competitive 2048 adversarial model.
+        //
+        // depth counts half-plies: even = MAX turn, odd = CHANCE (spawn) turn.
+
+        const PROB_2 = 0.9, PROB_4 = 0.1;
+
+        /**
+         * expectiminimaxMax — player's turn (MAX node).
+         * Returns the best board evaluation the player can achieve.
+         * Tie-breaking is deterministic: lower direction index wins.
+         */
+        function expectiminimaxMax(b, depth) {
+            if (depth <= 0) return evaluateBoardForPlayer(b);
+
+            let best = -Infinity;
+            let anyMoved = false;
+            for (let dir = 0; dir < 4; dir++) {
+                const { board: nb, moved } = applyDirection(b, dir);
+                if (!moved) continue;
+                anyMoved = true;
+                const val = expectiminimaxChance(nb, depth - 1);
+                // Strict greater-than: lower dir index wins ties deterministically
+                if (val > best) best = val;
+            }
+            return anyMoved ? best : evaluateBoardForPlayer(b);
+        }
+
+        /**
+         * expectiminimaxChance — spawner's turn (adversarial CHANCE node).
+         *
+         * For each empty cell the spawner picks the adversarial placement:
+         *   score(cell) = PROB_2 * eval(board with 2 at cell, depth-1)
+         *                + PROB_4 * eval(board with 4 at cell, depth-1)
+         * The spawner then picks the cell with the MINIMUM expected value.
+         *
+         * This matches the standard expectiminimax formulation for 2048:
+         *   - The tile VALUE is random (drawn from the distribution).
+         *   - The tile POSITION is adversarial (chosen to minimise player score).
+         */
+        function expectiminimaxChance(b, depth) {
+            const empty = availableCells(b);
+            if (!empty.length) return evaluateBoardForPlayer(b);
+
+            // Pruning: if very many empty cells and depth is still high,
+            // deterministically select the most disruptive subset.
+            const cells = (empty.length > 6 && depth >= 3)
+                ? sampleCells(b, empty, 6)
+                : empty;
+
+            let worstExpected = Infinity;
+
+            for (const [r, c] of cells) {
+                // Expected value if spawner places tile at (r, c)
+                const b2 = cloneBoard(b); b2[r][c] = 2;
+                const b4 = cloneBoard(b); b4[r][c] = 4;
+
+                const ev2 = (depth <= 1)
+                    ? evaluateBoardForPlayer(b2)
+                    : expectiminimaxMax(b2, depth - 1);
+                const ev4 = (depth <= 1)
+                    ? evaluateBoardForPlayer(b4)
+                    : expectiminimaxMax(b4, depth - 1);
+
+                const expected = PROB_2 * ev2 + PROB_4 * ev4;
+                if (expected < worstExpected) worstExpected = expected;
+            }
+            return worstExpected;
+        }
+
+        /**
+         * cellPriority — deterministic sort key for pruning empty cells.
+         * Higher priority = more likely to be disruptive to the player:
+         *   - Prefer edges/corners (high centerPenalty)
+         *   - Prefer cells adjacent to large tiles
+         *   - Prefer cells with large neighbour values (break snake structure)
+         */
+        function cellPriority(b, r, c) {
+            const centerPenalty = Math.abs(r - 1.5) + Math.abs(c - 1.5);
+            let neighbourMax = 0;
+            const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+            for (const [dr, dc] of dirs) {
+                const nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE)
+                    neighbourMax = Math.max(neighbourMax, b[nr][nc]);
+            }
+            // Higher = picked first. Center penalty and neighbour value both push up priority.
+            return centerPenalty * 10 + Math.log2(neighbourMax + 1);
+        }
+
+        /**
+         * sampleCells — deterministically select the n most disruptive empty cells.
+         * No randomness: sorted by cellPriority descending, then truncated.
+         */
+        function sampleCells(b, cells, n) {
+            if (cells.length <= n) return cells;
+            return cells
+                .slice()
+                .sort((a, bv) => cellPriority(b, bv[0], bv[1]) - cellPriority(b, a[0], a[1]))
+                .slice(0, n);
+        }
+
+        /**
+         * findBestAdversarialSpawn — finds the single cell+value combination
+         * that minimises the player's expectiminimax score.
+         *
+         * Fully deterministic: no Math.random, ties broken by (r, c, val) order.
+         * Returns { r, c, val, score }.
+         */
+        function findBestAdversarialSpawn(b, maxDepth) {
+            const empty = availableCells(b);
+            if (!empty.length) return null;
+
+            let worstScore = Infinity;
+            let worstCell  = null;
+            let worstVal   = 2;
+
+            for (const [r, c] of empty) {
+                for (const val of [2, 4]) {
+                    const prob = val === 2 ? PROB_2 : PROB_4;
+                    const tmp  = cloneBoard(b);
+                    tmp[r][c]  = val;
+
+                    // Pure expected value from the player's perspective — no fuzz.
+                    // The adversarial spawner simply picks whichever (cell, val) pair
+                    // leaves the player worst off after optimal play.
+                    const playerScore = expectiminimaxMax(tmp, maxDepth - 1);
+
+                    // Weight by spawn probability so the spawner's decision is
+                    // grounded in the real distribution — not pure minimax on val alone.
+                    const adjScore = PROB_2 * (val === 2 ? playerScore : 0)
+                                   + PROB_4 * (val === 4 ? playerScore : 0)
+                                   + (val === 2 ? 0 : playerScore); // full score for whichever val
+
+                    // Simpler: just use playerScore directly.
+                    // Tie-break deterministically by (r ASC, c ASC, val ASC).
+                    if (playerScore < worstScore ||
+                        (playerScore === worstScore && (r < worstCell[0] ||
+                            (r === worstCell[0] && c < worstCell[1]) ||
+                            (r === worstCell[0] && c === worstCell[1] && val < worstVal)))) {
+                        worstScore = playerScore;
+                        worstCell  = [r, c];
+                        worstVal   = val;
+                    }
                 }
             }
 
-            function hideOverlay() {
-                document.getElementById('overlay').className = 'overlay';
+            // Deterministic fallback: pick first empty cell with value 2
+            if (!worstCell) {
+                const [r, c] = empty[0];
+                return { r, c, val: 2, score: 0 };
             }
-            // ─── GAME ACTIONS ─────────────────────────────────────────────
-            function initGame() {
-                board = emptyBoard();
-                score = 0;
-                over = false;
-                won = false;
-                keepPlaying = false;
-                calculatingMove = false;
-                moveCount = 0;
-                startingTwoPositions = [];
-                hideOverlay();
-                document.getElementById('thinking-overlay').classList.remove('visible');
-                const cells = availableCells(board);
-                let r1, c1, r2, c2;
-                let tries = 0;
-                do {
-                    const i1 = Math.floor(Math.random() * cells.length);
-                    let i2 = Math.floor(Math.random() * (cells.length - 1));
-                    if (i2 >= i1) i2++;
-                    [r1, c1] = cells[i1];
-                    [r2, c2] = cells[i2];
-                    tries++;
-                } while ((Math.abs(r1 - r2) < 2 || Math.abs(c1 - c2) < 2) && tries < 200);
-                board[r1][c1] = 2;
-                board[r2][c2] = 2;
-                startingTwoPositions = [{
-                    r: r1,
-                    c: c1
-                }, {
-                    r: r2,
-                    c: c2
-                }];
-                updateScoreDisplay();
-                prevBoard = null;
-                renderBoard(board, null, null);
-            }
-            async function doMove(dir) {
-                if (calculatingMove) return;
-                if (over || (won && !keepPlaying)) return;
-                const {
-                    board: nb,
-                    score: gained,
-                    moved
-                } = applyDirection(board, dir);
-                if (!moved) return;
-                calculatingMove = true;
-                const oldBoard = board.map(r => [...r]);
-                board = nb;
-                score += gained;
-                if (score > best) {
-                    best = score;
-                    localStorage.setItem('devious2048best', best);
-                }
-                moveCount++;
-                const mergeCells = [];
+
+            return { r: worstCell[0], c: worstCell[1], val: worstVal, score: worstScore };
+        }
+
+        // ─── MIDPOINT HELPER (opening gambit, move 1) ────────────────────────────────
+        function midpointCell(b, p1, p2) {
+            const mr = (p1.r + p2.r) / 2;
+            const mc = (p1.c + p2.c) / 2;
+            const empty = availableCells(b);
+            if (!empty.length) return null;
+            empty.sort((a, bv) => {
+                const da = (a[0] - mr) ** 2 + (a[1] - mc) ** 2;
+                const db = (bv[0] - mr) ** 2 + (bv[1] - mc) ** 2;
+                return da - db;
+            });
+            return { r: empty[0][0], c: empty[0][1] };
+        }
+
+        // ─── MAIN SPAWN FUNCTION ──────────────────────────────────────────────────────
+        function deviousSpawn(b, mc) {
+            const empty = availableCells(b);
+            if (!empty.length) return null;
+
+            // Opening gambit: after the very first player move, place a 4 between the two 2s.
+            if (mc === 1) {
+                const twos = [];
                 for (let r = 0; r < SIZE; r++)
-                    for (let c = 0; c < SIZE; c++) {
-                        if (nb[r][c] && nb[r][c] > (oldBoard[r][c] || 0) && nb[r][c] === (oldBoard[r][c] || 0) * 2) mergeCells.push([r, c]);
-                    }
-                if (gained) showScoreDelta(gained);
-                updateScoreDisplay();
-                renderBoard(board, null, mergeCells);
-                if (!won)
-                    for (let r = 0; r < SIZE; r++)
-                        for (let c = 0; c < SIZE; c++)
-                            if (board[r][c] === 2048) {
-                                won = true;
-                                break;
-                            }
-                let spawnResult = null;
-                if (cellsAvailable(board)) {
-                    spawnResult = await withThinkingOverlay(() => deviousSpawn(board, moveCount));
-                    board[spawnResult.chosen.r][spawnResult.chosen.c] = spawnResult.chosen.val;
-                }
-                calculatingMove = false;
-                renderBoard(board, spawnResult, null);
-                if (!movesAvailable(board)) {
-                    over = true;
-                    setTimeout(() => showOverlay('lost'), 400);
-                } else if (won && !keepPlaying) {
-                    setTimeout(() => showOverlay('won'), 400);
+                    for (let c = 0; c < SIZE; c++)
+                        if (b[r][c] === 2) twos.push({ r, c });
+                if (twos.length === 2) {
+                    const mid = midpointCell(b, twos[0], twos[1]);
+                    if (mid) return { chosen: { r: mid.r, c: mid.c, val: 4 } };
                 }
             }
-            // ─── INPUT ────────────────────────────────────────────────────
-            document.addEventListener('keydown', e => {
-                const dirMap = {
-                    ArrowLeft: 0,
-                    a: 0,
-                    A: 0,
-                    ArrowUp: 1,
-                    w: 1,
-                    W: 1,
-                    ArrowRight: 2,
-                    d: 2,
-                    D: 2,
-                    ArrowDown: 3,
-                    s: 3,
-                    S: 3
-                };
-                if (dirMap[e.key] !== undefined) {
-                    e.preventDefault();
-                    doMove(dirMap[e.key]);
+
+            const depth = getMaxDepth();
+            const chosen = findBestAdversarialSpawn(b, depth);
+            return { chosen };
+        }
+
+        // ─── TILE COLOURS ────────────────────────────────────────────────────────────
+        function tileClass(val) {
+            if (val === 2048) return 't2048';
+            if (val > 2048)  return 'tsuper';
+            return { 2:'t2',4:'t4',8:'t8',16:'t16',32:'t32',64:'t64',
+                     128:'t128',256:'t256',512:'t512',1024:'t1024' }[val] || 't2';
+        }
+
+        // ─── RENDERING ───────────────────────────────────────────────────────────────
+        let prevBoard = null;
+
+        function renderBoard(newBoard, spawnResult, mergeCells) {
+            const layer = document.getElementById('tile-layer');
+            layer.innerHTML = '';
+            for (let r = 0; r < SIZE; r++) {
+                for (let c = 0; c < SIZE; c++) {
+                    const val = newBoard[r][c];
+                    if (!val) continue;
+                    const el = document.createElement('div');
+                    el.className = 'tile ' + tileClass(val);
+                    el.textContent = val;
+                    el.style.left   = tileOffset(c) + 'px';
+                    el.style.top    = tileOffset(r) + 'px';
+                    el.style.width  = tileSize() + 'px';
+                    el.style.height = tileSize() + 'px';
+                    if (spawnResult && r === spawnResult.chosen.r && c === spawnResult.chosen.c)
+                        el.classList.add('new-tile');
+                    if (mergeCells)
+                        for (const [mr, mc] of mergeCells)
+                            if (mr === r && mc === c) { el.classList.add('merged-tile'); break; }
+                    layer.appendChild(el);
                 }
-            });
-            let touchStartX = null,
-                touchStartY = null;
-            document.getElementById('board-wrap').addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            }, {
-                passive: true
-            });
-            document.getElementById('board-wrap').addEventListener('touchend', e => {
-                if (touchStartX === null) return;
-                const dx = e.changedTouches[0].clientX - touchStartX;
-                const dy = e.changedTouches[0].clientY - touchStartY;
-                const adx = Math.abs(dx),
-                    ady = Math.abs(dy);
-                if (Math.max(adx, ady) < 20) return;
-                if (adx > ady) doMove(dx > 0 ? 2 : 0);
-                else doMove(dy > 0 ? 3 : 1);
-                touchStartX = touchStartY = null;
-            });
-            // ─── BUTTONS ─────────────────────────────────────────────────
-            document.getElementById('btn-new').addEventListener('click', initGame);
-            document.getElementById('btn-retry').addEventListener('click', initGame);
-            document.getElementById('btn-keep').addEventListener('click', () => {
-                keepPlaying = true;
-                hideOverlay();
-            });
-            // ─── RESIZE ──────────────────────────────────────────────────
-            window.addEventListener('resize', () => {
-                if (board) renderBoard(board, null, null);
-            });
-            // ─── START ───────────────────────────────────────────────────
-            initGame();
+            }
+            prevBoard = newBoard.map(r => [...r]);
+        }
+
+        // ─── SCORE DISPLAY ────────────────────────────────────────────────────────────
+        function showScoreDelta(delta) {
+            if (!delta) return;
+            const el = document.createElement('div');
+            el.className = 'score-delta';
+            el.textContent = '+' + delta;
+            el.style.left = (Math.random() * 200 + 100) + 'px';
+            el.style.top  = (Math.random() * 100 + 100) + 'px';
+            document.getElementById('board-wrap').appendChild(el);
+            setTimeout(() => el.remove(), 700);
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('best').textContent  = best;
+        }
+
+        // ─── OVERLAY ─────────────────────────────────────────────────────────────────
+        function showOverlay(type) {
+            const ov    = document.getElementById('overlay');
+            const title = document.getElementById('overlay-title');
+            const sub   = document.getElementById('overlay-sub');
+            const keep  = document.getElementById('btn-keep');
+            ov.className = 'overlay active ' + type;
+            if (type === 'won') {
+                title.textContent = 'You won!';
+                sub.textContent   = 'Against all odds… keep going?';
+                keep.style.display = 'inline-block';
+            } else {
+                title.textContent  = 'Game Over';
+                sub.textContent    = 'Try better next time.';
+                keep.style.display = 'none';
+            }
+        }
+
+        function hideOverlay() {
+            document.getElementById('overlay').className = 'overlay';
+        }
+
+        // ─── GAME ACTIONS ─────────────────────────────────────────────────────────────
+        function initGame() {
+            board = emptyBoard();
+            score = 0;
+            over  = false;
+            won   = false;
+            keepPlaying    = false;
+            calculatingMove = false;
+            moveCount = 0;
+            hideOverlay();
+            document.getElementById('thinking-overlay').classList.remove('visible');
+
+            const cells = availableCells(board);
+            let r1, c1, r2, c2, tries = 0;
+            do {
+                const i1 = Math.floor(Math.random() * cells.length);
+                let   i2 = Math.floor(Math.random() * (cells.length - 1));
+                if (i2 >= i1) i2++;
+                [r1, c1] = cells[i1];
+                [r2, c2] = cells[i2];
+                tries++;
+            } while ((Math.abs(r1 - r2) < 2 || Math.abs(c1 - c2) < 2) && tries < 200);
+
+            board[r1][c1] = 2;
+            board[r2][c2] = 2;
+            updateScoreDisplay();
+            prevBoard = null;
+            renderBoard(board, null, null);
+        }
+
+        async function doMove(dir) {
+            if (calculatingMove) return;
+            if (over || (won && !keepPlaying)) return;
+
+            const { board: nb, score: gained, moved } = applyDirection(board, dir);
+            if (!moved) return;
+
+            calculatingMove = true;
+            const oldBoard = board.map(r => [...r]);
+            board = nb;
+            score += gained;
+            if (score > best) {
+                best = score;
+                localStorage.setItem('devious2048best', best);
+            }
+            moveCount++;
+
+            const mergeCells = [];
+            for (let r = 0; r < SIZE; r++)
+                for (let c = 0; c < SIZE; c++) {
+                    if (nb[r][c] && nb[r][c] > (oldBoard[r][c] || 0) &&
+                        nb[r][c] === (oldBoard[r][c] || 0) * 2)
+                        mergeCells.push([r, c]);
+                }
+
+            if (gained) showScoreDelta(gained);
+            updateScoreDisplay();
+            renderBoard(board, null, mergeCells);
+
+            if (!won)
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++)
+                        if (board[r][c] === 2048) { won = true; break; }
+
+            let spawnResult = null;
+            if (cellsAvailable(board)) {
+                const depth = getMaxDepth();
+                const label = 'Calculating most evil move...';
+                spawnResult = await withThinkingOverlay(label, () => deviousSpawn(board, moveCount));
+                board[spawnResult.chosen.r][spawnResult.chosen.c] = spawnResult.chosen.val;
+            }
+
+            calculatingMove = false;
+            renderBoard(board, spawnResult, null);
+
+            if (!movesAvailable(board)) {
+                over = true;
+                setTimeout(() => showOverlay('lost'), 400);
+            } else if (won && !keepPlaying) {
+                setTimeout(() => showOverlay('won'), 400);
+            }
+        }
+
+        // ─── INPUT ────────────────────────────────────────────────────────────────────
+        document.addEventListener('keydown', e => {
+            const dirMap = {
+                ArrowLeft:0, a:0, A:0,
+                ArrowUp:1,   w:1, W:1,
+                ArrowRight:2,d:2, D:2,
+                ArrowDown:3, s:3, S:3
+            };
+            if (dirMap[e.key] !== undefined) {
+                e.preventDefault();
+                doMove(dirMap[e.key]);
+            }
+        });
+
+        let touchStartX = null, touchStartY = null;
+        document.getElementById('board-wrap').addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.getElementById('board-wrap').addEventListener('touchend', e => {
+            if (touchStartX === null) return;
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            const adx = Math.abs(dx), ady = Math.abs(dy);
+            if (Math.max(adx, ady) < 20) return;
+            if (adx > ady) doMove(dx > 0 ? 2 : 0);
+            else           doMove(dy > 0 ? 3 : 1);
+            touchStartX = touchStartY = null;
+        });
+
+        // ─── BUTTONS ──────────────────────────────────────────────────────────────────
+        document.getElementById('btn-new').addEventListener('click', initGame);
+        document.getElementById('btn-retry').addEventListener('click', initGame);
+        document.getElementById('btn-keep').addEventListener('click', () => {
+            keepPlaying = true;
+            hideOverlay();
+        });
+
+        // ─── RESIZE ───────────────────────────────────────────────────────────────────
+        window.addEventListener('resize', () => {
+            if (board) renderBoard(board, null, null);
+        });
+
+        // ─── START ────────────────────────────────────────────────────────────────────
+        initGame();
         </script>
     </body>
 </html>
